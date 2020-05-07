@@ -6,13 +6,18 @@ spring:
     restart:
       enabled: false       #热部署
 
+  servlet:
+    multipart:                  #上传文件配置
+      enabled: true             #是否支持多文件上传
+      max-file-size: 100MB      #最大文件大小
+      max-request-size: 100MB   #最大请求大小(多文件上传总大小限制)
+
   datasource:
     druid:                          #springboot2不支持配置继承,如多数据源每个要写完整配置
       driver-class-name: dm.jdbc.driver.DmDriver
-      url: jdbc:dm://192.168.0.44:5236/DmDemo?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8          #数据库连接url
+      url: jdbc:dm://192.168.1.3:5236/yozo?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8          #数据库连接url
       username: yozo                            #数据库用户名
-      password: yozosoft                          #数据库密码
-      filters: mergeStat,config,wall,stat
+      password: yozosoft2020                          #数据库密码
       max-active: 2000                 # 最大连接池数量
       initial-size: 10                # 初始化时建立物理连接的个数
       max-wait: 3000                 # 获取连接时最大等待时间,单位毫秒
@@ -25,11 +30,11 @@ spring:
       test-on-return: false           # 归还连接时执行validationQuery检测连接是否有效,做了这个配置会降低性能
 
   redis:
-    database: 0 # Redis数据库索引（默认为0）
+    database: 2 # Redis数据库索引（默认为0）
     timeout: 20000 #设置客户端超时时间，单位是毫秒，默认为2000
     password: yozosoft #密码
     #单机版
-    host: 172.19.18.19
+    host: 192.168.1.3
     port: 6379
     #集群版
     #    cluster:
