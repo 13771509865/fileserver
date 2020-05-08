@@ -56,10 +56,10 @@ mybatis:
 
 #分页插件配置
 pagehelper:
-  helperDialect: mysql  #数据库连接
+  helperDialect: dm  #数据库连接
   reasonable: true      #分页合理化参数,如超过最后一页修正
-  supportMethodsArguments: true
-  page-size-zero: true  #支持通过 Mapper 接口参数来传递分页参数，直接传分页参数支持分页(pageNum,pageSize)
+  supportMethodsArguments: true    #支持通过 Mapper 接口参数来传递分页参数，直接传分页参数支持分页(pageNum,pageSize)
+  page-size-zero: true  #如果pageSize为0则查询全部结果
 
 #actuator,spring监控服务
 management:

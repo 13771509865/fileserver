@@ -26,6 +26,7 @@
         <mybatis-starter.version>2.1.1</mybatis-starter.version>
         <mysql-connector.version>8.0.16</mysql-connector.version>
         <pagehelper-starter.version>1.2.13</pagehelper-starter.version>
+        <springfox-swagger-ui.version>2.9.2</springfox-swagger-ui.version>
     </properties>
 
     <dependencies>
@@ -100,6 +101,12 @@
             <groupId>com.dm</groupId>
             <artifactId>DmJdbcDriver18</artifactId>
             <version>${dm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-swagger-ui.version}</version>
         </dependency>
     </dependencies>
 
