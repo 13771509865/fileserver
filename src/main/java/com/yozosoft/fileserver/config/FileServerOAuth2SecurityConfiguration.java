@@ -54,7 +54,7 @@ public class FileServerOAuth2SecurityConfiguration extends ResourceServerConfigu
                 .antMatchers("/swagger-resources**").permitAll()
                 .antMatchers("/actuator**").permitAll()
                 .antMatchers("/v2/api-docs").permitAll()
-
+                .anyRequest().permitAll()
                 .and().apply(refreshTokenSecurityConfigurerAdapter());
     }
 
