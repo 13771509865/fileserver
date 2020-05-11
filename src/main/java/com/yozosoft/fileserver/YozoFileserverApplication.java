@@ -9,7 +9,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication(scanBasePackages = {"com.yozosoft"})
 @ServletComponentScan
-@MapperScan("com.yozosoft.epdrive.dao")
+@MapperScan("com.yozosoft.fileserver.dao")
 public class YozoFileserverApplication extends SpringBootServletInitializer {
 
     @Override
