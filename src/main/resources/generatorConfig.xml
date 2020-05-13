@@ -2,14 +2,14 @@
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
-    <!-- <classPathEntry location="C:\oracle\product\10.2.0\db_1\jdbc\lib\ojdbc14.jar" />-->
+    <classPathEntry location="D:\maven_repository\daily\com\dm\DmJdbcDriver18\1.1.45\DmJdbcDriver18-1.1.45.jar" />
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <commentGenerator>
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
         <!-- 数据库链接URL、用户名、密码 -->
         <jdbcConnection driverClass="dm.jdbc.driver.DmDriver"
-                        connectionURL="jdbc:dm://192.168.1.3:5236/YOZO?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8"
+                        connectionURL="jdbc:dm://192.168.1.3:5236/FILESERVER?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8"
                         userId="yozo"
                         password="yozosoft2020">
         </jdbcConnection>
@@ -18,21 +18,25 @@
         </javaTypeResolver>
         <!-- 生成模型的包名和位置 -->
         <javaModelGenerator targetPackage="com.yozosoft.fileserver.model.po"
-                            targetProject="yozo-fileserver">
+                            targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
         <!-- 生成的映射文件包名和位置 -->
-        <sqlMapGenerator targetPackage="mapping" targetProject="yozo-fileserver">
+        <sqlMapGenerator targetPackage="mapping" targetProject="src/main/resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <!-- 生成DAO的包名和位置 -->
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.yozosoft.fileserver.dao"
-                             targetProject="yozo-fileserver">
+                             targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         <!-- 要生成那些表(更改tableName和domainObjectName就可以) -->
-        <table schema="" tableName="yozofile" domainObjectName="YozoFilePo" enableCountByExample="false"
+<!--        <table sechme="FILESERVER" tableName="YOZOFILEREF" domainObjectName="YozoFileRefPo" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+<!--        </table>-->
+        <table tableName="FILEREFRELATION" domainObjectName="FileRefRelationPo" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
         </table>

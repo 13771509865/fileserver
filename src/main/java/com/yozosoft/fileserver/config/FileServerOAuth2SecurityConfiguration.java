@@ -49,7 +49,7 @@ public class FileServerOAuth2SecurityConfiguration extends ResourceServerConfigu
                 .sessionFixation().migrateSession()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/**").authenticated()
+//                .antMatchers("/api/**").authenticated()
                 .antMatchers("/error").permitAll()
                 .antMatchers("/swagger-resources**").permitAll()
                 .antMatchers("/actuator**").permitAll()
