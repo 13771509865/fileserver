@@ -18,9 +18,11 @@ spring:
         driver-class-name: dm.jdbc.driver.DmDriver
 #        driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:dm://192.168.1.3:5236/FILESERVER?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8          #数据库连接url
-#        url: jdbc:mysql://192.168.0.44:3306/duc?characterEncoding=utf-8&serverTimezone=Asia/Shanghai          #数据库连接url
+#        url: jdbc:mysql://192.168.0.44:3306/fileserver?characterEncoding=utf-8&serverTimezone=Asia/Shanghai          #数据库连接url
         username: yozo                            #数据库用户名
         password: yozosoft2020                          #数据库密码
+#        username: root                            #数据库用户名
+#        password: 123456                          #数据库密码
         max-active: 2000                 # 最大连接池数量
         initial-size: 10                # 初始化时建立物理连接的个数
         max-wait: 3000                 # 获取连接时最大等待时间,单位毫秒
@@ -54,7 +56,7 @@ spring:
       shutdown-timeout: 1000
 
 mybatis:
-  mapper-locations: classpath:mapping/*.xml
+  mapper-locations: classpath:mapping/dm/*.xml
   type-aliases-package: com.yozosoft.fileserver.model
 
 #分页插件配置
@@ -88,7 +90,11 @@ yfs:
   workId: 1         #范围是0-1024
   storage:
     type: 0         #0-本地存储，1-Oss，2-Obs
-    localRootPath:       #针对本地存储设置的存储根目录
+    localRootPath: D:/fcs      #针对本地存储设置的存储根目录
+  downloadRoot: D:/fcs/download
+  downloadTempPath: D:/fcs/temp
+  downloadDomain: http://127.0.0.1:9001/
+  signSecret: qaxet9223210^*&
 
 app:
   callback:

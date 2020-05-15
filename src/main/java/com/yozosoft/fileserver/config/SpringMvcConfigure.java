@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.yozosoft.fileserver.interceptor.SignInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -22,6 +24,9 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 public class SpringMvcConfigure implements WebMvcConfigurer {
+
+    @Autowired
+    private SignInterceptor signInterceptor;
 
     /**
      * @description 配置静态资源, 避免静态资源被拦截
@@ -44,6 +49,7 @@ public class SpringMvcConfigure implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(signInterceptor).addPathPatterns("/api/file/**").excludePathPatterns("/api/file/localDownload/**");
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.yozosoft.fileserver.service.sourcefile.impl;
 
+import com.yozosoft.fileserver.common.constants.EnumAppType;
 import com.yozosoft.fileserver.common.constants.EnumResultCode;
 import com.yozosoft.fileserver.common.utils.DefaultResult;
 import com.yozosoft.fileserver.common.utils.FastJsonUtils;
@@ -14,10 +15,12 @@ import com.yozosoft.fileserver.service.fileref.IFileRefService;
 import com.yozosoft.fileserver.service.sourcefile.ISourceFileManager;
 import com.yozosoft.fileserver.service.storage.IStorageManager;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -57,13 +60,22 @@ public class SourceFileManagerImpl implements ISourceFileManager {
     @Override
     public IResult<YozoFileRefPo> storageFileAndSave(MultipartFile multipartFile, UploadFileDto uploadFileDto) {
         try {
+            IResult<Integer> checkAppResult = EnumAppType.checkAppByName(uploadFileDto.getAppName());
+            if(!checkAppResult.isSuccess()){
+                return DefaultResult.failResult(checkAppResult.getMessage());
+            }
+            Integer appId = checkAppResult.getData();
             String fileMd5 = Md5Utils.getMD5(multipartFile.getInputStream());
             String webFileMd5 = uploadFileDto.getFileMd5();
             if (!webFileMd5.equals(fileMd5)) {
                 return DefaultResult.failResult(EnumResultCode.E_UPLOAD_FILE_MD5_MISMATCH.getInfo());
             }
             String storageUrl = iStorageManager.generateStorageUrl(multipartFile.getOriginalFilename());
-            IResult<YozoFileRefPo> storageResult = iStorageManager.storageFile(multipartFile, storageUrl, FastJsonUtils.parseJSON2Map(uploadFileDto.getUserMetadata()), fileMd5);
+            Map<String, Object> userMetadata = new HashMap<>();
+            if(StringUtils.isNotBlank(uploadFileDto.getUserMetadata())){
+                userMetadata = FastJsonUtils.parseJSON2Map(uploadFileDto.getUserMetadata());
+            }
+            IResult<YozoFileRefPo> storageResult = iStorageManager.storageFile(multipartFile, storageUrl, userMetadata, fileMd5, appId);
             return storageResult;
         } catch (Exception e) {
             e.printStackTrace();

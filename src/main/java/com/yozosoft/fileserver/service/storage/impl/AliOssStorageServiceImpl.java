@@ -2,6 +2,7 @@ package com.yozosoft.fileserver.service.storage.impl;
 
 import com.yozosoft.fileserver.common.constants.StorageConstant;
 import com.yozosoft.fileserver.common.utils.IResult;
+import com.yozosoft.fileserver.model.dto.FileRefInfoDto;
 import com.yozosoft.fileserver.service.storage.IStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -22,6 +23,16 @@ public class AliOssStorageServiceImpl implements IStorageService {
 
     @Override
     public IResult<String> storageFile(MultipartFile multipartFile, String storageUrl, Map<String, Object> userMetadata) {
+        return null;
+    }
+
+    @Override
+    public IResult<Map<Long, String>> downloadFileToServer(Map<Long, FileRefInfoDto> storageUrls, String storageDir) {
+        return null;
+    }
+
+    @Override
+    public IResult<String> generateDownloadUrl(Map<Long, FileRefInfoDto> storageUrls, String fileName, Long timeOut) {
         return null;
     }
 }

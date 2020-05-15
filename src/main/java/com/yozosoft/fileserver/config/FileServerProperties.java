@@ -27,4 +27,16 @@ public class FileServerProperties {
     @NotBlank
     private String workId;
 
+    @NotBlank
+    private String downloadRoot;
+
+    @NotBlank
+    private String downloadTempPath;
+
+    @NotBlank
+    private String downloadDomain;
+
+    @NotBlank
+    private String signSecret;
+
 }

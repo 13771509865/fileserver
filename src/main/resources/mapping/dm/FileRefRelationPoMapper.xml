@@ -14,8 +14,26 @@
     ID, GMT_CREATE, GMT_MODIFIED, STATUS, FILEREF_ID, APP_ID, REMARK
     </sql>
 
+    <sql id="search_condition">
+        <where>
+            <if test="fileRefId != null">
+                AND FILEREF_ID = #{fileRefId}
+            </if>
+            <if test="appId != null">
+                AND APP_ID = #{appId}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByRefIdAndAppId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from "FILESERVER"."FILEREFRELATION"
+        <include refid="search_condition"/>
+    </select>
+
     <insert id="insertSelective" parameterType="com.yozosoft.fileserver.model.po.FileRefRelationPo">
-        insert into FILEREFRELATION
+        insert into "FILESERVER"."FILEREFRELATION"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 ID,

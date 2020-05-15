@@ -1,6 +1,7 @@
 package com.yozosoft.fileserver.service.storage;
 
 import com.yozosoft.fileserver.common.utils.IResult;
+import com.yozosoft.fileserver.model.dto.FileRefInfoDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
@@ -15,10 +16,14 @@ public interface IStorageService {
     /**
      * 存储文件
      *
-     * @param file         文件
-     * @param storageUrl   存储路径
-     * @param userMetadata 用户自定义数据
+     * @param multipartFile 文件
+     * @param storageUrl    存储路径
+     * @param userMetadata  用户自定义数据
      * @return 存储结果
      */
     IResult<String> storageFile(MultipartFile multipartFile, String storageUrl, Map<String, Object> userMetadata);
+
+    IResult<Map<Long, String>> downloadFileToServer(Map<Long, FileRefInfoDto> storageUrls, String storageDir);
+
+    IResult<String> generateDownloadUrl(Map<Long, FileRefInfoDto> storageUrls, String fileName, Long timeOut);
 }

@@ -19,12 +19,23 @@
     <select id="selectByFileMd5" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from YOZOFILEREF
-        where fileMd5 = #{fileMd5,jdbcType=VARCHAR}
+        from "FILESERVER"."YOZOFILEREF"
+        where FILE_MD5 = #{fileMd5,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByCheckApp" resultMap="BaseResultMap">
+        select
+        T1.*
+        from "FILESERVER"."YOZOFILEREF" T1 LEFT JOIN "FILESERVER"."FILEREFRELATION" T2 ON T2.FILEREF_ID = T1.ID
+        where T2.APP_ID = #{appId,jdbcType=INTEGER} and T1.ID IN
+        <foreach item="item" index="index" collection="fileRefIds"
+                 open="(" separator="," close=")">
+            ${item}
+        </foreach>
     </select>
 
     <insert id="insertSelective" parameterType="com.yozosoft.fileserver.model.po.YozoFileRefPo">
-        insert into YOZOFILEREF
+        insert into "FILESERVER"."YOZOFILEREF"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 ID,

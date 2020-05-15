@@ -1,6 +1,9 @@
 package com.yozosoft.fileserver.service.fileref;
 
+import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
+
+import java.util.List;
 
 /**
  * @author zhoufeng
@@ -22,7 +25,9 @@ public interface IFileRefService {
      * @param yozoFileRefPo fileRef对象
      * @return 插入结果
      */
-    Boolean insertFileRefPo(YozoFileRefPo yozoFileRefPo);
+    IResult<Long> insertFileRefPo(YozoFileRefPo yozoFileRefPo);
 
     YozoFileRefPo buildYozoFileRefPo(String fileMd5, String storageUrl, Long fileSize);
+
+    List<YozoFileRefPo> selectByCheckApp(List<Long> fileRefIds, Integer appId);
 }

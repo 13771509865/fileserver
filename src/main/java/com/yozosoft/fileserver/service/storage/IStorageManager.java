@@ -28,5 +28,5 @@ public interface IStorageManager {
      * @param fileMd5 文件md5
      * @return
      */
-    IResult<YozoFileRefPo> storageFile(MultipartFile multipartFile, String storageUrl, Map<String, Object> userMetadata, String fileMd5);
+    IResult<YozoFileRefPo> storageFile(MultipartFile multipartFile, String storageUrl, Map<String, Object> userMetadata, String fileMd5, Integer appId);
 }

@@ -28,7 +28,9 @@ public class HttpApiServiceAspect {
         Object[] args = joinPoint.getArgs();
         //url进行encode编码,不然httpClient可能请求失败
         Integer urlIndex = getUrlIndex(joinPoint);
-        args[urlIndex] = UrlEncodingUtils.encodeUrl(args[urlIndex].toString());
+        if (urlIndex > -1) {
+            args[urlIndex] = UrlEncodingUtils.encodeUrl(args[urlIndex].toString());
+        }
         return joinPoint.proceed(args);
     }
 

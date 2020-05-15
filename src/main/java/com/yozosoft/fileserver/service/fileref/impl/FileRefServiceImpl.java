@@ -1,16 +1,19 @@
 package com.yozosoft.fileserver.service.fileref.impl;
 
 import com.yozosoft.fileserver.common.utils.DateViewUtils;
+import com.yozosoft.fileserver.common.utils.DefaultResult;
+import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.dao.YozoFileRefPoMapper;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.fileref.IFileRefService;
 import org.apache.shardingsphere.core.strategy.keygen.SnowflakeShardingKeyGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author zhoufeng
@@ -34,13 +37,14 @@ public class FileRefServiceImpl implements IFileRefService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean insertFileRefPo(YozoFileRefPo yozoFileRefPo) {
+    public IResult<Long> insertFileRefPo(YozoFileRefPo yozoFileRefPo) {
         try {
-            int insertNum = yozoFileRefPoMapper.insertSelective(yozoFileRefPo);
-            return insertNum > 0;
-        } catch (DuplicateKeyException duplicateKeyException) {
+            int insertResult = yozoFileRefPoMapper.insertSelective(yozoFileRefPo);
+            return insertResult > 0 ? DefaultResult.successResult(yozoFileRefPo.getId()) : DefaultResult.failResult();
+        } catch (DataIntegrityViolationException dataIntegrityViolationException) {
             //TODO 这边可能是要改的
-            return true;
+            YozoFileRefPo fileRefByMd5 = getFileRefByMd5(yozoFileRefPo.getFileMd5());
+            return fileRefByMd5 != null ? DefaultResult.successResult(fileRefByMd5.getId()) : DefaultResult.failResult();
         }
     }
 
@@ -57,5 +61,10 @@ public class FileRefServiceImpl implements IFileRefService {
         yozoFileRefPo.setStorageUrl(storageUrl);
         yozoFileRefPo.setFileSize(fileSize);
         return yozoFileRefPo;
+    }
+
+    @Override
+    public List<YozoFileRefPo> selectByCheckApp(List<Long> fileRefIds, Integer appId) {
+        return yozoFileRefPoMapper.selectByCheckApp(fileRefIds, appId);
     }
 }
