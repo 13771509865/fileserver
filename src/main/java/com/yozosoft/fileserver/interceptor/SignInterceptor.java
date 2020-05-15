@@ -1,5 +1,7 @@
 package com.yozosoft.fileserver.interceptor;
 
+import com.yozosoft.common.exception.ForbiddenAccessException;
+import com.yozosoft.fileserver.common.constants.EnumResultCode;
 import com.yozosoft.fileserver.common.constants.SignConstant;
 import com.yozosoft.fileserver.common.utils.FileServerVerifyUtil;
 import com.yozosoft.fileserver.config.FileServerProperties;
@@ -28,10 +30,14 @@ public class SignInterceptor implements HandlerInterceptor {
         String nonce = request.getHeader(SignConstant.NONCE);
         String sign = request.getHeader(SignConstant.SIGN);
         if (StringUtils.isBlank(nonce) || StringUtils.isBlank(sign)) {
-            return false;
+            throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
         }
         Map<String, String[]> parameterMap = request.getParameterMap();
         parameterMap.put(SignConstant.NONCE, new String[]{nonce});
-        return FileServerVerifyUtil.verifySign(parameterMap, fileServerProperties.getSignSecret(), sign);
+        Boolean verifyResult = FileServerVerifyUtil.verifySign(parameterMap, fileServerProperties.getSignSecret(), sign);
+        if (!verifyResult) {
+            throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
+        }
+        return true;
     }
 }

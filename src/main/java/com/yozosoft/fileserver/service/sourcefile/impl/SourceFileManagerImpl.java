@@ -9,9 +9,11 @@ import com.yozosoft.fileserver.common.utils.Md5Utils;
 import com.yozosoft.fileserver.model.dto.UploadFileDto;
 import com.yozosoft.fileserver.model.dto.UploadResultDto;
 import com.yozosoft.fileserver.model.dto.YozoFileRefDto;
+import com.yozosoft.fileserver.model.po.FileRefRelationPo;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.callback.ICallBackService;
 import com.yozosoft.fileserver.service.fileref.IFileRefService;
+import com.yozosoft.fileserver.service.refrelation.IRefRelationService;
 import com.yozosoft.fileserver.service.sourcefile.ISourceFileManager;
 import com.yozosoft.fileserver.service.storage.IStorageManager;
 import lombok.extern.slf4j.Slf4j;
@@ -41,10 +43,25 @@ public class SourceFileManagerImpl implements ISourceFileManager {
     @Autowired
     private IStorageManager iStorageManager;
 
+    @Autowired
+    private IRefRelationService iRefRelationService;
+
     @Override
-    public IResult<YozoFileRefPo> checkCanSecUpload(String fileMd5) {
+    public IResult<YozoFileRefPo> checkCanSecUpload(String fileMd5, String appName) {
+        IResult<Integer> checkAppResult = EnumAppType.checkAppByName(appName);
+        if (!checkAppResult.isSuccess()) {
+            return DefaultResult.failResult(checkAppResult.getMessage());
+        }
         YozoFileRefPo yozoFileRefPo = iFileRefService.getFileRefByMd5(fileMd5);
-        return yozoFileRefPo != null ? DefaultResult.successResult(yozoFileRefPo) : DefaultResult.failResult(EnumResultCode.E_FILE_SEC_UPLOAD_UNABLE.getInfo());
+        if (yozoFileRefPo == null) {
+            return DefaultResult.failResult(EnumResultCode.E_FILE_SEC_UPLOAD_UNABLE.getInfo());
+        }
+        FileRefRelationPo fileRefRelationPo = iRefRelationService.buildFileRefRelationPo(yozoFileRefPo.getId(), checkAppResult.getData());
+        Boolean relationResult = iRefRelationService.insertRefRelationPo(fileRefRelationPo);
+        if (!relationResult) {
+            return DefaultResult.failResult(EnumResultCode.E_FILE_APP_RELATION_SAVE_FAIL.getInfo());
+        }
+        return DefaultResult.successResult(yozoFileRefPo);
     }
 
     @Override
@@ -61,7 +78,7 @@ public class SourceFileManagerImpl implements ISourceFileManager {
     public IResult<YozoFileRefPo> storageFileAndSave(MultipartFile multipartFile, UploadFileDto uploadFileDto) {
         try {
             IResult<Integer> checkAppResult = EnumAppType.checkAppByName(uploadFileDto.getAppName());
-            if(!checkAppResult.isSuccess()){
+            if (!checkAppResult.isSuccess()) {
                 return DefaultResult.failResult(checkAppResult.getMessage());
             }
             Integer appId = checkAppResult.getData();
@@ -72,7 +89,7 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             }
             String storageUrl = iStorageManager.generateStorageUrl(multipartFile.getOriginalFilename());
             Map<String, Object> userMetadata = new HashMap<>();
-            if(StringUtils.isNotBlank(uploadFileDto.getUserMetadata())){
+            if (StringUtils.isNotBlank(uploadFileDto.getUserMetadata())) {
                 userMetadata = FastJsonUtils.parseJSON2Map(uploadFileDto.getUserMetadata());
             }
             IResult<YozoFileRefPo> storageResult = iStorageManager.storageFile(multipartFile, storageUrl, userMetadata, fileMd5, appId);

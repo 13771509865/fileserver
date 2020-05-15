@@ -34,9 +34,9 @@ public class SourceFileController {
     @ApiOperation(value = "判断是否可以秒传")
     @GetMapping("/upload")
     public ResponseEntity getFileBySecUpload(@Valid UploadFileDto uploadFileDto) {
-        IResult<YozoFileRefPo> checkResult = iSourceFileManager.checkCanSecUpload(uploadFileDto.getFileMd5());
+        IResult<YozoFileRefPo> checkResult = iSourceFileManager.checkCanSecUpload(uploadFileDto.getFileMd5(), uploadFileDto.getAppName());
         if (!checkResult.isSuccess()) {
-            return ResponseEntity.ok(JsonResultUtils.buildMapResultByResultCode(EnumResultCode.E_FILE_SEC_UPLOAD_UNABLE));
+            return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_FILE_SEC_UPLOAD_UNABLE.getValue(), null, checkResult.getMessage()));
         }
         YozoFileRefPo yozoFileRefPo = checkResult.getData();
         return sendAppCallBack(yozoFileRefPo, uploadFileDto);
@@ -44,7 +44,7 @@ public class SourceFileController {
 
     @ApiOperation(value = "真实上传文件")
     @PostMapping("/upload")
-    public ResponseEntity getFileByUpload(@RequestParam(value = "file") MultipartFile multipartFile,@Valid UploadFileDto uploadFileDto) {
+    public ResponseEntity getFileByUpload(@RequestParam(value = "file") MultipartFile multipartFile, @Valid UploadFileDto uploadFileDto) {
         IResult<YozoFileRefPo> storageResult = iSourceFileManager.storageFileAndSave(multipartFile, uploadFileDto);
         if (!storageResult.isSuccess()) {
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_UPLOAD_FILE_FAIL.getValue(), null, storageResult.getMessage()));

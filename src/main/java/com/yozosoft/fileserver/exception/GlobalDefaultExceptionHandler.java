@@ -1,5 +1,6 @@
 package com.yozosoft.fileserver.exception;
 
+import com.yozosoft.common.exception.YozoServiceException;
 import com.yozosoft.fileserver.common.constants.EnumResultCode;
 import com.yozosoft.fileserver.common.utils.JsonResultUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +40,11 @@ public class GlobalDefaultExceptionHandler {
         return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_INVALID_PARAM.getValue(), null, StringUtils.join(message, ",")));
     }
 
+    @ExceptionHandler(YozoServiceException.class)
+    @ResponseBody
+    public ResponseEntity yozoExceptionHandler(YozoServiceException e) {
+        return new ResponseEntity(JsonResultUtils.buildMapResult(e.getCode(), null, e.getMessage()), HttpStatus.valueOf(200));
+    }
 
     @ExceptionHandler(Exception.class)
     @ResponseBody

@@ -19,7 +19,7 @@ public interface ISourceFileManager {
      * @param fileMd5 文件md5
      * @return result
      */
-    IResult<YozoFileRefPo> checkCanSecUpload(String fileMd5);
+    IResult<YozoFileRefPo> checkCanSecUpload(String fileMd5, String appName);
 
     IResult<UploadResultDto> sendAppCallBack(YozoFileRefPo yozoFileRefPo, UploadFileDto uploadFileDto);
 
