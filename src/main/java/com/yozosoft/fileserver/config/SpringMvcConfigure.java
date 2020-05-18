@@ -49,7 +49,7 @@ public class SpringMvcConfigure implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(signInterceptor).addPathPatterns("/api/file/**").excludePathPatterns("/api/file/localDownload/**");
+//        registry.addInterceptor(signInterceptor).addPathPatterns("/api/file/**").excludePathPatterns("/api/file/localDownload/**");
     }
 
     /**
@@ -92,7 +92,7 @@ public class SpringMvcConfigure implements WebMvcConfigurer {
     }
 
     @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(responseBodyConverter());
         //解决处理中文问题后接口500问题
         converters.add(messageConverter());

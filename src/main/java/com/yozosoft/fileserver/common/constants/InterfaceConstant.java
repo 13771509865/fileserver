@@ -7,5 +7,5 @@ package com.yozosoft.fileserver.common.constants;
  **/
 public class InterfaceConstant {
 
-    public static final String LOCAL_DOWNLOAD_INTERFACE = "/api/file/localDownload";
+    public static final String LOCAL_DOWNLOAD_INTERFACE = "/api/file/download";
 }

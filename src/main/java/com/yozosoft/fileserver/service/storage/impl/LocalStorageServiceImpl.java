@@ -111,15 +111,18 @@ public class LocalStorageServiceImpl implements IStorageService {
         if (storageUrls.size() == 1) {
             //单文件下载
             String storageUrl = null;
+            String tempFileName = null;
             //TODO 改造
             for (FileRefInfoDto fileRefInfoDto : storageUrls.values()) {
                 storageUrl = fileRefInfoDto.getStorageUrl();
+                tempFileName = fileRefInfoDto.getFileName();
             }
             File downloadFile = new File(localRootPath, storageUrl);
             if (!downloadFile.isFile()) {
                 return DefaultResult.failResult(EnumResultCode.E_DOWNLOAD_FILE_NOT_EXIST.getInfo());
             }
-            IResult<String> buildResult = buildDownloadUrl(downloadFile.getAbsolutePath(), fileName, timeOut);
+            String targetFileName = iDownloadService.getTargetFileName(tempFileName, storageUrl);
+            IResult<String> buildResult = buildDownloadUrl(downloadFile.getAbsolutePath(), targetFileName, timeOut);
             if (!buildResult.isSuccess()) {
                 return DefaultResult.failResult(buildResult.getMessage());
             }
@@ -136,7 +139,7 @@ public class LocalStorageServiceImpl implements IStorageService {
             if (!zipResult.isSuccess()) {
                 return DefaultResult.failResult(zipResult.getMessage());
             }
-            IResult<String> buildResult = buildDownloadUrl(zipFile.getAbsolutePath(), fileName, timeOut);
+            IResult<String> buildResult = buildDownloadUrl(zipFile.getAbsolutePath(), zipFile.getName(), timeOut);
             if (!buildResult.isSuccess()) {
                 return DefaultResult.failResult(buildResult.getMessage());
             }
@@ -147,7 +150,7 @@ public class LocalStorageServiceImpl implements IStorageService {
     private IResult<String> buildDownloadUrl(String downloadPath, String fileName, Long timeOut) {
         String downloadId = UUIDHelper.generateUUID();
         LocalDownloadDto localDownloadDto = new LocalDownloadDto(fileName, downloadPath);
-        boolean setResult = redisService.set(downloadId, localDownloadDto, iDownloadService.buildTimeOut(timeOut));
+        boolean setResult = redisService.set(downloadId, localDownloadDto, timeOut);
         if (!setResult) {
             return DefaultResult.failResult(EnumResultCode.E_REDIS_ERROR.getInfo());
         }

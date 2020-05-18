@@ -23,7 +23,7 @@ import java.io.IOException;
 @RequestMapping(value = "/api/util")
 public class UtilController {
 
-    @ApiOperation(value = "真实上传文件")
+    @ApiOperation(value = "获取文件md5值")
     @PostMapping("/fileMd5")
     public ResponseEntity getFileByUpload(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
         String fileMd5 = Md5Utils.getMD5(multipartFile.getInputStream());

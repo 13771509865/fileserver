@@ -93,7 +93,7 @@ yfs:
     localRootPath: D:/fcs      #针对本地存储设置的存储根目录
   downloadRoot: D:/fcs/download
   downloadTempPath: D:/fcs/temp
-  downloadDomain: http://127.0.0.1:9001/
+  downloadDomain: http://127.0.0.1:9001
   signSecret: qaxet9223210^*&
 
 app:

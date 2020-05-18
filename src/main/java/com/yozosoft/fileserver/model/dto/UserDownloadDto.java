@@ -24,7 +24,6 @@ public class UserDownloadDto {
     @NotEmpty(message = "需要下载的fileRefId为空")
     private List<FileInfoDto> fileInfos;
 
-    @NotBlank(message = "下载文件名未定义")
     private String fileName;
 
     private Long timeOut;

@@ -51,7 +51,7 @@ public class DownloadManagerImpl implements IDownloadManager {
         if (!checkResult.isSuccess()) {
             return DefaultResult.failResult(checkResult.getMessage());
         }
-        return iStorageService.generateDownloadUrl(checkResult.getData(), userDownloadDto.getFileName(), userDownloadDto.getTimeOut());
+        return iStorageService.generateDownloadUrl(checkResult.getData(), userDownloadDto.getFileName(), iDownloadService.buildTimeOut(userDownloadDto.getTimeOut()));
     }
 
     @Override

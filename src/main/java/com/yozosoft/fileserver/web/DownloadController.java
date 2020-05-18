@@ -60,7 +60,7 @@ public class DownloadController {
     }
 
     @ApiOperation(value = "local下载接口")
-    @GetMapping("/localDownload/{downloadId}/**")
+    @GetMapping("/download/{downloadId}/**")
     public ResponseEntity localDownload(@PathVariable("downloadId") String downloadId) {
         IResult<LocalDownloadDto> localDownloadDtoResult = iDownloadManager.getLocalDownloadDto(downloadId);
         if (!localDownloadDtoResult.isSuccess()) {
