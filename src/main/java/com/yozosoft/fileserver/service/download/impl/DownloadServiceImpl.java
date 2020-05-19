@@ -20,10 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author zhoufeng
@@ -64,26 +61,23 @@ public class DownloadServiceImpl implements IDownloadService {
     }
 
     @Override
-    public IResult<Map<Long, String>> buildStorageUrlsMap(List<Long> fileRefIds, Integer appId) {
+    public IResult<List<YozoFileRefPo>> buildStorageUrls(List<Long> fileRefIds, Integer appId) {
         List<YozoFileRefPo> yozoFileRefPos = iFileRefService.selectByCheckApp(fileRefIds, appId);
         if (yozoFileRefPos == null || yozoFileRefPos.isEmpty() || fileRefIds.size() != yozoFileRefPos.size()) {
             return DefaultResult.failResult(EnumResultCode.E_DOWNLOAD_FILE_NUM_ILLEGAL.getInfo());
         }
-        Map<Long, String> result = new HashMap<>(fileRefIds.size());
-        for (YozoFileRefPo yozoFileRefPo : yozoFileRefPos) {
-            result.put(yozoFileRefPo.getId(), yozoFileRefPo.getStorageUrl());
-        }
-        return DefaultResult.successResult(result);
+        return DefaultResult.successResult(yozoFileRefPos);
     }
 
     @Override
-    public Map<Long, FileRefInfoDto> buildFileRefInfoMap(Map<Long, String> fileRefs, List<FileInfoDto> fileInfos) {
-        Map<Long, FileRefInfoDto> result = new HashMap<>(fileRefs.size());
+    public List<FileRefInfoDto> buildFileRefInfos(List<YozoFileRefPo> fileRefs, List<FileInfoDto> fileInfos) {
+        List<FileRefInfoDto> result = new ArrayList<>();
         Map<Long, String> fileNameMap = buildFileNameMap(fileInfos);
-        for (Long fileRefId : fileRefs.keySet()) {
+        for (YozoFileRefPo yozoFileRefPo : fileRefs) {
+            Long fileRefId = yozoFileRefPo.getId();
             String fileName = fileNameMap.get(fileRefId);
-            FileRefInfoDto fileRefInfoDto = new FileRefInfoDto(fileRefId, fileRefs.get(fileRefId), fileName);
-            result.put(fileRefId, fileRefInfoDto);
+            FileRefInfoDto fileRefInfoDto = new FileRefInfoDto(fileRefId, yozoFileRefPo.getStorageUrl(), fileName);
+            result.add(fileRefInfoDto);
         }
         return result;
     }

@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -72,15 +73,14 @@ public class LocalStorageServiceImpl implements IStorageService {
     }
 
     @Override
-    public IResult<Map<Long, String>> downloadFileToServer(Map<Long, FileRefInfoDto> storageUrls, String storageDir) {
+    public IResult<Map<Long, String>> downloadFileToServer(List<FileRefInfoDto> storageUrls, String storageDir) {
         Map<Long, String> result = new HashMap<>(storageUrls.size());
         String localRootPath = storageProperties.getLocalRootPath();
         if (StringUtils.isBlank(localRootPath)) {
             return DefaultResult.failResult(EnumResultCode.E_LOCAL_STORAGE_ROOT_ERROR.getInfo());
         }
         try {
-            for (Long fileRefId : storageUrls.keySet()) {
-                FileRefInfoDto fileRefInfoDto = storageUrls.get(fileRefId);
+            for (FileRefInfoDto fileRefInfoDto : storageUrls) {
                 String storageUrl = fileRefInfoDto.getStorageUrl();
                 File sourceFile = new File(localRootPath, storageUrl);
                 if (!sourceFile.isFile()) {
@@ -92,7 +92,7 @@ public class LocalStorageServiceImpl implements IStorageService {
                     targetFile.delete();
                 }
                 FileUtils.copyFile(sourceFile, targetFile);
-                result.put(fileRefId, targetFile.getAbsolutePath());
+                result.put(fileRefInfoDto.getFileRefId(), targetFile.getAbsolutePath());
             }
             return DefaultResult.successResult(result);
         } catch (Exception e) {
@@ -103,20 +103,16 @@ public class LocalStorageServiceImpl implements IStorageService {
     }
 
     @Override
-    public IResult<String> generateDownloadUrl(Map<Long, FileRefInfoDto> storageUrls, String fileName, Long timeOut) {
+    public IResult<String> generateDownloadUrl(List<FileRefInfoDto> storageUrls, String fileName, Long timeOut) {
         String localRootPath = storageProperties.getLocalRootPath();
         if (StringUtils.isBlank(localRootPath)) {
             return DefaultResult.failResult(EnumResultCode.E_LOCAL_STORAGE_ROOT_ERROR.getInfo());
         }
         if (storageUrls.size() == 1) {
             //单文件下载
-            String storageUrl = null;
-            String tempFileName = null;
-            //TODO 改造
-            for (FileRefInfoDto fileRefInfoDto : storageUrls.values()) {
-                storageUrl = fileRefInfoDto.getStorageUrl();
-                tempFileName = fileRefInfoDto.getFileName();
-            }
+            FileRefInfoDto fileRefInfoDto = storageUrls.get(0);
+            String storageUrl = fileRefInfoDto.getStorageUrl();
+            String tempFileName = fileRefInfoDto.getFileName();
             File downloadFile = new File(localRootPath, storageUrl);
             if (!downloadFile.isFile()) {
                 return DefaultResult.failResult(EnumResultCode.E_DOWNLOAD_FILE_NOT_EXIST.getInfo());

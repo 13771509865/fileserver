@@ -4,6 +4,7 @@ import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.model.dto.FileInfoDto;
 import com.yozosoft.fileserver.model.dto.FileRefInfoDto;
 import com.yozosoft.fileserver.model.dto.ServerDownloadDto;
+import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 
 import java.io.File;
 import java.util.List;
@@ -26,9 +27,9 @@ public interface IDownloadService {
 
     String buildStorageDir(ServerDownloadDto serverDownloadDto);
 
-    IResult<Map<Long, String>> buildStorageUrlsMap(List<Long> fileRefIds, Integer appId);
+    IResult<List<YozoFileRefPo>> buildStorageUrls(List<Long> fileRefIds, Integer appId);
 
-    Map<Long, FileRefInfoDto> buildFileRefInfoMap(Map<Long, String> fileRefs, List<FileInfoDto> fileInfos);
+    List<FileRefInfoDto> buildFileRefInfos(List<YozoFileRefPo> fileRefs, List<FileInfoDto> fileInfos);
 
     File buildZipDir();
 

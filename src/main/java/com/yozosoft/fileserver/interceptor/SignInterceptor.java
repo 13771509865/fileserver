@@ -12,6 +12,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -32,7 +33,8 @@ public class SignInterceptor implements HandlerInterceptor {
         if (StringUtils.isBlank(nonce) || StringUtils.isBlank(sign)) {
             throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
         }
-        Map<String, String[]> parameterMap = request.getParameterMap();
+        Map<String, String[]> parameterMap = new HashMap<>();
+        parameterMap.putAll(request.getParameterMap());
         parameterMap.put(SignConstant.NONCE, new String[]{nonce});
         Boolean verifyResult = FileServerVerifyUtil.verifySign(parameterMap, fileServerProperties.getSignSecret(), sign);
         if (!verifyResult) {

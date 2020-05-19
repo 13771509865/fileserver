@@ -5,6 +5,7 @@ import com.yozosoft.fileserver.common.constants.EnumResultCode;
 import com.yozosoft.fileserver.common.utils.DefaultResult;
 import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.model.dto.*;
+import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.download.IDownloadManager;
 import com.yozosoft.fileserver.service.download.IDownloadService;
 import com.yozosoft.fileserver.service.redis.RedisService;
@@ -36,7 +37,7 @@ public class DownloadManagerImpl implements IDownloadManager {
 
     @Override
     public IResult<Map<Long, String>> serverDownload(ServerDownloadDto serverDownloadDto) {
-        IResult<Map<Long, FileRefInfoDto>> checkResult = checkAndGetStorageUrls(serverDownloadDto.getAppName(), serverDownloadDto.getFileInfos());
+        IResult<List<FileRefInfoDto>> checkResult = checkAndGetStorageUrls(serverDownloadDto.getAppName(), serverDownloadDto.getFileInfos());
         if (!checkResult.isSuccess()) {
             return DefaultResult.failResult(checkResult.getMessage());
         }
@@ -47,7 +48,7 @@ public class DownloadManagerImpl implements IDownloadManager {
 
     @Override
     public IResult<String> getDownloadUrl(UserDownloadDto userDownloadDto) {
-        IResult<Map<Long, FileRefInfoDto>> checkResult = checkAndGetStorageUrls(userDownloadDto.getAppName(), userDownloadDto.getFileInfos());
+        IResult<List<FileRefInfoDto>> checkResult = checkAndGetStorageUrls(userDownloadDto.getAppName(), userDownloadDto.getFileInfos());
         if (!checkResult.isSuccess()) {
             return DefaultResult.failResult(checkResult.getMessage());
         }
@@ -71,18 +72,18 @@ public class DownloadManagerImpl implements IDownloadManager {
         }
     }
 
-    private IResult<Map<Long, FileRefInfoDto>> checkAndGetStorageUrls(String appName, List<FileInfoDto> fileInfos) {
+    private IResult<List<FileRefInfoDto>> checkAndGetStorageUrls(String appName, List<FileInfoDto> fileInfos) {
         IResult<Integer> checkAppResult = EnumAppType.checkAppByName(appName);
         if (!checkAppResult.isSuccess()) {
             return DefaultResult.failResult(checkAppResult.getMessage());
         }
         List<Long> fileRefIds = buildFileRefIds(fileInfos);
-        IResult<Map<Long, String>> mapResult = iDownloadService.buildStorageUrlsMap(fileRefIds, checkAppResult.getData());
-        if (!mapResult.isSuccess()) {
-            return DefaultResult.failResult(mapResult.getMessage());
+        IResult<List<YozoFileRefPo>> buildResult = iDownloadService.buildStorageUrls(fileRefIds, checkAppResult.getData());
+        if (!buildResult.isSuccess()) {
+            return DefaultResult.failResult(buildResult.getMessage());
         }
-        Map<Long, FileRefInfoDto> fileRefInfoDtoMap = iDownloadService.buildFileRefInfoMap(mapResult.getData(), fileInfos);
-        return DefaultResult.successResult(fileRefInfoDtoMap);
+        List<FileRefInfoDto> fileRefInfos = iDownloadService.buildFileRefInfos(buildResult.getData(), fileInfos);
+        return DefaultResult.successResult(fileRefInfos);
     }
 
     private List<Long> buildFileRefIds(List<FileInfoDto> fileInfos) {
