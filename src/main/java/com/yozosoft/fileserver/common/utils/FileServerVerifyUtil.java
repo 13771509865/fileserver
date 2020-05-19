@@ -1,6 +1,5 @@
 package com.yozosoft.fileserver.common.utils;
 
-import com.yozosoft.fileserver.common.constants.SignConstant;
 import com.yozosoft.util.SecretSignatureUtils;
 
 import java.util.*;
@@ -12,8 +11,10 @@ import java.util.*;
  **/
 public class FileServerVerifyUtil {
 
+    private static final String SIGN = "sign";
+
     private static String uniqSortParams(Map<String, String[]> params) {
-        params.remove(SignConstant.SIGN);
+        params.remove(SIGN);
         Map<String, String[]> sortedMap = new TreeMap<String, String[]>();
         sortedMap.putAll(params);
         StringBuffer stringBuffer = new StringBuffer();
