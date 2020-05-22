@@ -20,5 +20,9 @@ public class TimeConstant {
      * 一分钟的秒数
      */
     public static final Long SECOND_OF_MINUTE = 60L;
+    /**
+     * 一天的毫秒数
+     */
+    public static final Long MILLISECOND_OF_DAY = 86400000L;
 
 }

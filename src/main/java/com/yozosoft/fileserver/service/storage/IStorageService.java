@@ -2,6 +2,7 @@ package com.yozosoft.fileserver.service.storage;
 
 import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.model.dto.FileRefInfoDto;
+import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -27,4 +28,6 @@ public interface IStorageService {
     IResult<Map<Long, String>> downloadFileToServer(List<FileRefInfoDto> storageUrls, String storageDir);
 
     IResult<String> generateDownloadUrl(List<FileRefInfoDto> storageUrls, String fileName, Long timeOut);
+
+    IResult<YozoFileRefPo> saveFileInfo(YozoFileRefPo yozoFileRefPo, Integer appId);
 }

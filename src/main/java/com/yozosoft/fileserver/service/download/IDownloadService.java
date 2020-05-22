@@ -27,8 +27,6 @@ public interface IDownloadService {
 
     String buildStorageDir(ServerDownloadDto serverDownloadDto);
 
-    IResult<List<YozoFileRefPo>> buildStorageUrls(List<Long> fileRefIds, Integer appId);
-
     List<FileRefInfoDto> buildFileRefInfos(List<YozoFileRefPo> fileRefs, List<FileInfoDto> fileInfos);
 
     File buildZipDir();

@@ -2,6 +2,8 @@ package com.yozosoft.fileserver.service.refrelation;
 
 import com.yozosoft.fileserver.model.po.FileRefRelationPo;
 
+import java.util.List;
+
 /**
  * @author zhoufeng
  * @description ref关系service
@@ -26,5 +28,7 @@ public interface IRefRelationService {
      */
     FileRefRelationPo buildFileRefRelationPo(Long fileRefId, Integer appId);
 
-    FileRefRelationPo selectByRefAndApp(Long fileRefId, Integer appId);
+    List<FileRefRelationPo> selectByQuery(Long fileRefId, Integer appId);
+
+    Boolean deleteRefRelation(List<Long> fileRefIds, Integer appId);
 }

@@ -30,4 +30,8 @@ public interface IFileRefService {
     YozoFileRefPo buildYozoFileRefPo(String fileMd5, String storageUrl, Long fileSize);
 
     List<YozoFileRefPo> selectByCheckApp(List<Long> fileRefIds, Integer appId);
+
+    IResult<List<YozoFileRefPo>> buildStorageUrls(List<Long> fileRefIds, Integer appId);
+
+    Boolean deleteByIds(List<Long> fileRefIds);
 }

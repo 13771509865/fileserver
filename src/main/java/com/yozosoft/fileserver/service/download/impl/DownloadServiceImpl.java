@@ -1,11 +1,8 @@
 package com.yozosoft.fileserver.service.download.impl;
 
-import com.yozosoft.fileserver.common.constants.EnumResultCode;
 import com.yozosoft.fileserver.common.constants.StorageConstant;
 import com.yozosoft.fileserver.common.constants.TimeConstant;
 import com.yozosoft.fileserver.common.utils.DateViewUtils;
-import com.yozosoft.fileserver.common.utils.DefaultResult;
-import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.common.utils.UUIDHelper;
 import com.yozosoft.fileserver.config.FileServerProperties;
 import com.yozosoft.fileserver.model.dto.FileInfoDto;
@@ -13,7 +10,6 @@ import com.yozosoft.fileserver.model.dto.FileRefInfoDto;
 import com.yozosoft.fileserver.model.dto.ServerDownloadDto;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.download.IDownloadService;
-import com.yozosoft.fileserver.service.fileref.IFileRefService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +25,6 @@ import java.util.*;
  **/
 @Service("downloadServiceImpl")
 public class DownloadServiceImpl implements IDownloadService {
-
-    @Autowired
-    private IFileRefService iFileRefService;
 
     @Autowired
     private FileServerProperties fileServerProperties;
@@ -61,15 +54,6 @@ public class DownloadServiceImpl implements IDownloadService {
     }
 
     @Override
-    public IResult<List<YozoFileRefPo>> buildStorageUrls(List<Long> fileRefIds, Integer appId) {
-        List<YozoFileRefPo> yozoFileRefPos = iFileRefService.selectByCheckApp(fileRefIds, appId);
-        if (yozoFileRefPos == null || yozoFileRefPos.isEmpty() || fileRefIds.size() != yozoFileRefPos.size()) {
-            return DefaultResult.failResult(EnumResultCode.E_DOWNLOAD_FILE_NUM_ILLEGAL.getInfo());
-        }
-        return DefaultResult.successResult(yozoFileRefPos);
-    }
-
-    @Override
     public List<FileRefInfoDto> buildFileRefInfos(List<YozoFileRefPo> fileRefs, List<FileInfoDto> fileInfos) {
         List<FileRefInfoDto> result = new ArrayList<>();
         Map<Long, String> fileNameMap = buildFileNameMap(fileInfos);
@@ -84,7 +68,7 @@ public class DownloadServiceImpl implements IDownloadService {
 
     @Override
     public File buildZipDir() {
-        File zipDir = new File(fileServerProperties.getDownloadTempPath(), UUIDHelper.generateUUID());
+        File zipDir = new File(fileServerProperties.getTempPath(), UUIDHelper.generateUUID());
         if (zipDir.exists()) {
             zipDir.delete();
         }

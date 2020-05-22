@@ -17,6 +17,5 @@ public class YozoFileserverApplicationTests {
 
     @Test
     public void test() {
-        FileRefRelationPo fileRefRelationPo = refRelationService.selectByRefAndApp(1L, 1);
     }
 }

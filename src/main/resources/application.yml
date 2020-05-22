@@ -8,7 +8,7 @@ spring:
 
   servlet:
     multipart:                  #上传文件配置
-      enabled: true             #是否支持多文件上传
+      enabled: true             #是否支持文件上传
       max-file-size: 100MB      #最大文件大小
       max-request-size: 100MB   #最大请求大小(多文件上传总大小限制)
 
@@ -92,7 +92,7 @@ yfs:
     type: 0         #0-本地存储，1-Oss，2-Obs
     localRootPath: D:/fcs      #针对本地存储设置的存储根目录
   downloadRoot: D:/fcs/download
-  downloadTempPath: D:/fcs/temp
+  tempPath: D:/fcs/temp
   downloadDomain: http://127.0.0.1:9001
   signSecret: qaxet9223210^*&
 

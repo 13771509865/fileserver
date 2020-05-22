@@ -6,10 +6,9 @@ import com.yozosoft.fileserver.common.utils.DateViewUtils;
 import com.yozosoft.fileserver.common.utils.DefaultResult;
 import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.common.utils.UUIDHelper;
-import com.yozosoft.fileserver.model.po.FileRefRelationPo;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.fileref.IFileRefService;
-import com.yozosoft.fileserver.service.refrelation.IRefRelationService;
+import com.yozosoft.fileserver.service.storage.IStorageClient;
 import com.yozosoft.fileserver.service.storage.IStorageManager;
 import com.yozosoft.fileserver.service.storage.IStorageService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
@@ -39,7 +37,7 @@ public class StorageManagerImpl implements IStorageManager {
     private IFileRefService iFileRefService;
 
     @Autowired
-    private IRefRelationService iRefRelationService;
+    private IStorageClient iStorageClient;
 
     private final String folderFormat = "yyyy/MM/dd";
 
@@ -60,22 +58,14 @@ public class StorageManagerImpl implements IStorageManager {
             return DefaultResult.failResult(storageResult.getMessage());
         }
         YozoFileRefPo yozoFileRefPo = iFileRefService.buildYozoFileRefPo(fileMd5, storageUrl, multipartFile.getSize());
-        return saveFileInfo(yozoFileRefPo, appId);
+        return iStorageService.saveFileInfo(yozoFileRefPo, appId);
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public IResult<YozoFileRefPo> saveFileInfo(YozoFileRefPo yozoFileRefPo, Integer appId) {
-        IResult<Long> insertResult = iFileRefService.insertFileRefPo(yozoFileRefPo);
-        if (!insertResult.isSuccess() || insertResult.getData() == null || insertResult.getData() < 0) {
-            return DefaultResult.failResult(EnumResultCode.E_DB_STORAGE_FILE_REF_FAIL.getInfo());
+    @Override
+    public IResult<String> deleteFile(String storageUrl) {
+        if(StringUtils.isBlank(storageUrl)){
+            return DefaultResult.failResult(EnumResultCode.E_DELETE_REAL_FILE_FAIL.getInfo());
         }
-        Long fileRefId = insertResult.getData();
-        yozoFileRefPo.setId(fileRefId);
-        FileRefRelationPo fileRefRelationPo = iRefRelationService.buildFileRefRelationPo(fileRefId, appId);
-        Boolean relationResult = iRefRelationService.insertRefRelationPo(fileRefRelationPo);
-        if (!relationResult) {
-            return DefaultResult.failResult(EnumResultCode.E_FILE_APP_RELATION_SAVE_FAIL.getInfo());
-        }
-        return DefaultResult.successResult(yozoFileRefPo);
+        return iStorageClient.deleteFile(storageUrl);
     }
 }

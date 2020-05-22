@@ -17,4 +17,6 @@ public interface YozoFileRefPoMapper {
     YozoFileRefPo selectByFileMd5(String fileMd5);
 
     List<YozoFileRefPo> selectByCheckApp(@Param("fileRefIds") List<Long> fileRefIds, @Param("appId") Integer appId);
+
+    int deleteByIds(@Param("fileRefIds") List<Long> fileRefId);
 }

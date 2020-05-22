@@ -9,9 +9,9 @@ import org.apache.shardingsphere.core.strategy.keygen.SnowflakeShardingKeyGenera
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author zhoufeng
@@ -29,7 +29,6 @@ public class RefRelationServiceImpl implements IRefRelationService {
     private SnowflakeShardingKeyGenerator snowflakeShardingKeyGenerator;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Boolean insertRefRelationPo(FileRefRelationPo fileRefRelationPo) {
         try {
             int insertResult = fileRefRelationPoMapper.insertSelective(fileRefRelationPo);
@@ -40,9 +39,9 @@ public class RefRelationServiceImpl implements IRefRelationService {
     }
 
     @Override
-    public FileRefRelationPo selectByRefAndApp(Long fileRefId, Integer appId) {
-        FileRefRelationPo fileRefRelationPo = fileRefRelationPoMapper.selectByRefIdAndAppId(fileRefId, appId);
-        return fileRefRelationPo;
+    public List<FileRefRelationPo> selectByQuery(Long fileRefId, Integer appId) {
+        List<FileRefRelationPo> fileRefRelationPos = fileRefRelationPoMapper.selectByQuery(fileRefId, appId);
+        return fileRefRelationPos;
     }
 
     @Override
@@ -57,5 +56,11 @@ public class RefRelationServiceImpl implements IRefRelationService {
         fileRefRelationPo.setFileRefId(fileRefId);
         fileRefRelationPo.setAppId(appId);
         return fileRefRelationPo;
+    }
+
+    @Override
+    public Boolean deleteRefRelation(List<Long> fileRefIds, Integer appId) {
+        int result = fileRefRelationPoMapper.deleteByRefIdAndAppId(fileRefIds, appId);
+        return result > 0;
     }
 }

@@ -6,6 +6,7 @@ import com.yozosoft.fileserver.common.utils.DefaultResult;
 import com.yozosoft.fileserver.common.utils.FastJsonUtils;
 import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.common.utils.Md5Utils;
+import com.yozosoft.fileserver.model.dto.DeleteFileDto;
 import com.yozosoft.fileserver.model.dto.UploadFileDto;
 import com.yozosoft.fileserver.model.dto.UploadResultDto;
 import com.yozosoft.fileserver.model.dto.YozoFileRefDto;
@@ -15,6 +16,7 @@ import com.yozosoft.fileserver.service.callback.ICallBackService;
 import com.yozosoft.fileserver.service.fileref.IFileRefService;
 import com.yozosoft.fileserver.service.refrelation.IRefRelationService;
 import com.yozosoft.fileserver.service.sourcefile.ISourceFileManager;
+import com.yozosoft.fileserver.service.sourcefile.ISourceFileService;
 import com.yozosoft.fileserver.service.storage.IStorageManager;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,6 +48,9 @@ public class SourceFileManagerImpl implements ISourceFileManager {
 
     @Autowired
     private IRefRelationService iRefRelationService;
+
+    @Autowired
+    private ISourceFileService iSourceFileService;
 
     @Override
     public IResult<YozoFileRefPo> checkCanSecUpload(String fileMd5, String appName) {
@@ -99,6 +105,22 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             log.error("上传文件并保存异常", e);
             return DefaultResult.failResult(EnumResultCode.E_UPLOAD_FILE_FAIL.getInfo());
         }
+    }
+
+    @Override
+    public IResult<String> deleteFileRef(DeleteFileDto deleteFileDto) {
+        IResult<Integer> checkAppResult = EnumAppType.checkAppByName(deleteFileDto.getAppName());
+        if (!checkAppResult.isSuccess()) {
+            return DefaultResult.failResult(checkAppResult.getMessage());
+        }
+        //验证传过来的fileRefId是不是这个app的
+        IResult<List<YozoFileRefPo>> buildResult = iFileRefService.buildStorageUrls(deleteFileDto.getFileRefIds(), checkAppResult.getData());
+        if (!buildResult.isSuccess()) {
+            return DefaultResult.failResult(buildResult.getMessage());
+        }
+        List<YozoFileRefPo> yozoFileRefPos = buildResult.getData();
+        IResult<String> deleteResult = iSourceFileService.checkAndDeleteFile(yozoFileRefPos, deleteFileDto.getFileRefIds(), checkAppResult.getData());
+        return deleteResult;
     }
 
     private YozoFileRefDto buildYozoFileRefDto(YozoFileRefPo yozoFileRefPo, UploadFileDto uploadFileDto) {

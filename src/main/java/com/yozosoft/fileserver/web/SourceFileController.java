@@ -3,6 +3,7 @@ package com.yozosoft.fileserver.web;
 import com.yozosoft.fileserver.common.constants.EnumResultCode;
 import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.common.utils.JsonResultUtils;
+import com.yozosoft.fileserver.model.dto.DeleteFileDto;
 import com.yozosoft.fileserver.model.dto.UploadFileDto;
 import com.yozosoft.fileserver.model.dto.UploadResultDto;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
@@ -51,6 +52,16 @@ public class SourceFileController {
         }
         YozoFileRefPo yozoFileRefPo = storageResult.getData();
         return sendAppCallBack(yozoFileRefPo, uploadFileDto);
+    }
+
+    @ApiOperation(value = "删除源文件")
+    @DeleteMapping("/delete")
+    public ResponseEntity deleteFile(@Valid DeleteFileDto deleteFileDto) {
+        IResult<String> deleteResult = iSourceFileManager.deleteFileRef(deleteFileDto);
+        if (!deleteResult.isSuccess()) {
+            return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_DELETE_FILE_FAIL.getValue(), null, deleteResult.getMessage()));
+        }
+        return ResponseEntity.ok(JsonResultUtils.successMapResult());
     }
 
     private ResponseEntity sendAppCallBack(YozoFileRefPo yozoFileRefPo, UploadFileDto uploadFileDto) {

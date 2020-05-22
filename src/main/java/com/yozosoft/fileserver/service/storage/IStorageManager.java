@@ -29,4 +29,6 @@ public interface IStorageManager {
      * @return
      */
     IResult<YozoFileRefPo> storageFile(MultipartFile multipartFile, String storageUrl, Map<String, Object> userMetadata, String fileMd5, Integer appId);
+
+    IResult<String> deleteFile(String storageUrl);
 }

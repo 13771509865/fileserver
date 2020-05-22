@@ -31,7 +31,7 @@ public class FileServerProperties {
     private String downloadRoot;
 
     @NotBlank
-    private String downloadTempPath;
+    private String tempPath;
 
     @NotBlank
     private String downloadDomain;

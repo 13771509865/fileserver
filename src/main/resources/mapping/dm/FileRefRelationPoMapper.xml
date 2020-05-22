@@ -25,7 +25,16 @@
         </where>
     </sql>
 
-    <select id="selectByRefIdAndAppId" resultMap="BaseResultMap">
+    <delete id="deleteByRefIdAndAppId">
+        delete from "FILESERVER"."FILEREFRELATION"
+        where FILEREF_ID IN
+        <foreach item="item" index="index" collection="fileRefIds"
+                 open="(" separator="," close=")">
+            ${item}
+        </foreach> AND APP_ID = #{appId}
+    </delete>
+
+    <select id="selectByQuery" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from "FILESERVER"."FILEREFRELATION"

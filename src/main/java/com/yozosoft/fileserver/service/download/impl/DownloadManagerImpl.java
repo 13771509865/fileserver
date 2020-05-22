@@ -8,6 +8,7 @@ import com.yozosoft.fileserver.model.dto.*;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.download.IDownloadManager;
 import com.yozosoft.fileserver.service.download.IDownloadService;
+import com.yozosoft.fileserver.service.fileref.IFileRefService;
 import com.yozosoft.fileserver.service.redis.RedisService;
 import com.yozosoft.fileserver.service.storage.IStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class DownloadManagerImpl implements IDownloadManager {
 
     @Autowired
     private RedisService<LocalDownloadDto> redisService;
+
+    @Autowired
+    private IFileRefService iFileRefService;
 
     @Override
     public IResult<Map<Long, String>> serverDownload(ServerDownloadDto serverDownloadDto) {
@@ -78,7 +82,7 @@ public class DownloadManagerImpl implements IDownloadManager {
             return DefaultResult.failResult(checkAppResult.getMessage());
         }
         List<Long> fileRefIds = buildFileRefIds(fileInfos);
-        IResult<List<YozoFileRefPo>> buildResult = iDownloadService.buildStorageUrls(fileRefIds, checkAppResult.getData());
+        IResult<List<YozoFileRefPo>> buildResult = iFileRefService.buildStorageUrls(fileRefIds, checkAppResult.getData());
         if (!buildResult.isSuccess()) {
             return DefaultResult.failResult(buildResult.getMessage());
         }

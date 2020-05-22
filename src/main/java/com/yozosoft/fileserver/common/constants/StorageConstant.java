@@ -17,6 +17,8 @@ public class StorageConstant {
 
     public static final String DOCUMENT_PATH = "document";
 
+    public static final String ZIP_PATH = "zip";
+
     public static final String UNIFIED_FILENAME = "babel";
 
     public static final String MULTIPLE_DOWNLOAD_FILENAME = "yozo";

@@ -1,5 +1,6 @@
 package com.yozosoft.fileserver.service.fileref.impl;
 
+import com.yozosoft.fileserver.common.constants.EnumResultCode;
 import com.yozosoft.fileserver.common.utils.DateViewUtils;
 import com.yozosoft.fileserver.common.utils.DefaultResult;
 import com.yozosoft.fileserver.common.utils.IResult;
@@ -66,5 +67,20 @@ public class FileRefServiceImpl implements IFileRefService {
     @Override
     public List<YozoFileRefPo> selectByCheckApp(List<Long> fileRefIds, Integer appId) {
         return yozoFileRefPoMapper.selectByCheckApp(fileRefIds, appId);
+    }
+
+    @Override
+    public IResult<List<YozoFileRefPo>> buildStorageUrls(List<Long> fileRefIds, Integer appId) {
+        List<YozoFileRefPo> yozoFileRefPos = selectByCheckApp(fileRefIds, appId);
+        if (yozoFileRefPos == null || yozoFileRefPos.isEmpty() || fileRefIds.size() != yozoFileRefPos.size()) {
+            return DefaultResult.failResult(EnumResultCode.E_APP_FILE_NUM_ILLEGAL.getInfo());
+        }
+        return DefaultResult.successResult(yozoFileRefPos);
+    }
+
+    @Override
+    public Boolean deleteByIds(List<Long> fileRefIds) {
+        int deleteResult = yozoFileRefPoMapper.deleteByIds(fileRefIds);
+        return deleteResult > 0;
     }
 }
