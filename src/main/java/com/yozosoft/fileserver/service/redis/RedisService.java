@@ -21,7 +21,7 @@ public class RedisService<T> {
 
     @Autowired
     @Qualifier("fileServerRedisTemplate")
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<Object, Object> redisTemplate;
 
     public boolean set(String key, T value) {
         try {

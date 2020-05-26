@@ -10,7 +10,7 @@ import com.yozosoft.fileserver.service.download.IDownloadManager;
 import com.yozosoft.fileserver.service.download.IDownloadService;
 import com.yozosoft.fileserver.service.fileref.IFileRefService;
 import com.yozosoft.fileserver.service.redis.RedisService;
-import com.yozosoft.fileserver.service.storage.IStorageService;
+import com.yozosoft.fileserver.service.storage.IStorageManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ import java.util.Map;
 public class DownloadManagerImpl implements IDownloadManager {
 
     @Autowired
-    private IStorageService iStorageService;
+    private IStorageManager iStorageManager;
 
     @Autowired
     private IDownloadService iDownloadService;
@@ -46,7 +46,7 @@ public class DownloadManagerImpl implements IDownloadManager {
             return DefaultResult.failResult(checkResult.getMessage());
         }
         String storageDir = iDownloadService.buildStorageDir(serverDownloadDto);
-        IResult<Map<Long, String>> downloadResult = iStorageService.downloadFileToServer(checkResult.getData(), storageDir);
+        IResult<Map<Long, String>> downloadResult = iStorageManager.downloadFileToServer(checkResult.getData(), storageDir);
         return downloadResult;
     }
 
@@ -56,7 +56,7 @@ public class DownloadManagerImpl implements IDownloadManager {
         if (!checkResult.isSuccess()) {
             return DefaultResult.failResult(checkResult.getMessage());
         }
-        return iStorageService.generateDownloadUrl(checkResult.getData(), userDownloadDto.getFileName(), iDownloadService.buildTimeOut(userDownloadDto.getTimeOut()));
+        return iStorageManager.generateDownloadUrl(checkResult.getData(), userDownloadDto.getFileName(), iDownloadService.buildTimeOut(userDownloadDto.getTimeOut()));
     }
 
     @Override

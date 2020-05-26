@@ -21,4 +21,12 @@ import org.springframework.stereotype.Component;
 public class StorageProperties {
 
     private String localRootPath;
+
+    private String endPoint;
+
+    private String accesskey;
+
+    private String secretKey;
+
+    private String bucketName;
 }

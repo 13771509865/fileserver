@@ -46,9 +46,9 @@ public class GlobalDefaultExceptionHandler {
         return new ResponseEntity(JsonResultUtils.buildMapResult(e.getCode(), null, e.getMessage()), HttpStatus.valueOf(200));
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(Throwable.class)
     @ResponseBody
-    public ResponseEntity defaultExcepitonHandler(Exception ex) {
+    public ResponseEntity defaultExcepitonHandler(Throwable ex) {
         if (ex instanceof HttpRequestMethodNotSupportedException) {
             return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase(), HttpStatus.METHOD_NOT_ALLOWED);
         } else if (ex instanceof HttpMediaTypeNotSupportedException) {

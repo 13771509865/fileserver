@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yozosoft.fileserver.dao.FileRefRelationPoMapper">
+    <resultMap id="BaseResultMap" type="com.yozosoft.fileserver.model.po.FileRefRelationPo">
+        <result column="ID" jdbcType="BIGINT" property="id"/>
+        <result column="GMT_CREATE" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="GMT_MODIFIED" jdbcType="TIMESTAMP" property="gmtModified"/>
+        <result column="STATUS" jdbcType="INTEGER" property="status"/>
+        <result column="FILEREF_ID" jdbcType="BIGINT" property="fileRefId"/>
+        <result column="APP_ID" jdbcType="INTEGER" property="appId"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, GMT_CREATE, GMT_MODIFIED, STATUS, FILEREF_ID, APP_ID, REMARK
+    </sql>
+
+    <sql id="search_condition">
+        <where>
+            <if test="fileRefId != null">
+                AND FILEREF_ID = #{fileRefId}
+            </if>
+            <if test="appId != null">
+                AND APP_ID = #{appId}
+            </if>
+        </where>
+    </sql>
+
+    <delete id="deleteByRefIdAndAppId">
+        delete from FILEREFRELATION
+        where FILEREF_ID IN
+        <foreach item="item" index="index" collection="fileRefIds"
+                 open="(" separator="," close=")">
+            ${item}
+        </foreach> AND APP_ID = #{appId}
+    </delete>
+
+    <select id="selectByQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from FILEREFRELATION
+        <include refid="search_condition"/>
+    </select>
+
+    <insert id="insertSelective" parameterType="com.yozosoft.fileserver.model.po.FileRefRelationPo">
+        insert into FILEREFRELATION
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="gmtCreate != null">
+                GMT_CREATE,
+            </if>
+            <if test="gmtModified != null">
+                GMT_MODIFIED,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="fileRefId != null">
+                FILEREF_ID,
+            </if>
+            <if test="appId != null">
+                APP_ID,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="gmtCreate != null">
+                #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="fileRefId != null">
+                #{fileRefId,jdbcType=BIGINT},
+            </if>
+            <if test="appId != null">
+                #{appId,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+</mapper>

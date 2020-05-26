@@ -2,12 +2,13 @@ package com.yozosoft.fileserver.service.storage.impl;
 
 import com.yozosoft.fileserver.common.constants.EnumResultCode;
 import com.yozosoft.fileserver.common.constants.StorageConstant;
-import com.yozosoft.fileserver.common.utils.*;
+import com.yozosoft.fileserver.common.utils.DateViewUtils;
+import com.yozosoft.fileserver.common.utils.DefaultResult;
+import com.yozosoft.fileserver.common.utils.IResult;
+import com.yozosoft.fileserver.common.utils.UUIDHelper;
 import com.yozosoft.fileserver.config.FileServerProperties;
-import com.yozosoft.fileserver.model.dto.FileRefInfoDto;
 import com.yozosoft.fileserver.model.po.FileRefRelationPo;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
-import com.yozosoft.fileserver.service.download.IDownloadService;
 import com.yozosoft.fileserver.service.fileref.IFileRefService;
 import com.yozosoft.fileserver.service.refrelation.IRefRelationService;
 import com.yozosoft.fileserver.service.storage.IStorageClient;
@@ -20,8 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,9 +36,6 @@ public class StorageServiceImpl implements IStorageService {
     private FileServerProperties fileServerProperties;
 
     @Autowired
-    private IDownloadService iDownloadService;
-
-    @Autowired
     private IStorageClient iStorageClient;
 
     @Autowired
@@ -50,11 +46,13 @@ public class StorageServiceImpl implements IStorageService {
 
     private final String folderFormat = "yyyy/MM/dd";
 
-    //TODO 这边要重构
     @Override
     public IResult<String> storageFile(MultipartFile multipartFile, String storageUrl, Map<String, Object> userMetadata) {
         try {
             File storageTempFile = new File(fileServerProperties.getTempPath(), storageUrl);
+            if(!storageTempFile.getParentFile().exists()){
+                storageTempFile.getParentFile().mkdirs();
+            }
             multipartFile.transferTo(storageTempFile);
             IResult<String> uploadResult = iStorageClient.uploadFile(storageTempFile, storageUrl, userMetadata);
             return uploadResult;
@@ -62,56 +60,6 @@ public class StorageServiceImpl implements IStorageService {
             e.printStackTrace();
             log.error("本地保存上传文件失败", e);
             return DefaultResult.failResult(EnumResultCode.E_LOCAL_STORAGE_FILE_FAIL.getInfo());
-        }
-    }
-
-    @Override
-    public IResult<Map<Long, String>> downloadFileToServer(List<FileRefInfoDto> storageUrls, String storageDir) {
-        Map<Long, String> result = new HashMap<>(storageUrls.size());
-        for (FileRefInfoDto fileRefInfoDto : storageUrls) {
-            String storageUrl = fileRefInfoDto.getStorageUrl();
-            String targetFileName = iDownloadService.getTargetFileName(fileRefInfoDto.getFileName(), storageUrl);
-            File targetFile = new File(storageDir, targetFileName);
-            if (targetFile.exists()) {
-                targetFile.delete();
-            }
-            IResult<String> downloadResult = iStorageClient.downloadFile(storageUrl, targetFile);
-            if (!downloadResult.isSuccess()) {
-                return DefaultResult.failResult(downloadResult.getMessage());
-            }
-            result.put(fileRefInfoDto.getFileRefId(), targetFile.getAbsolutePath());
-        }
-        return DefaultResult.successResult(result);
-    }
-
-    @Override
-    public IResult<String> generateDownloadUrl(List<FileRefInfoDto> storageUrls, String fileName, Long timeOut) {
-        if (storageUrls.size() == 1) {
-            //单文件下载
-            FileRefInfoDto fileRefInfoDto = storageUrls.get(0);
-            String storageUrl = fileRefInfoDto.getStorageUrl();
-            String targetFileName = iDownloadService.getTargetFileName(fileRefInfoDto.getFileName(), storageUrl);
-            IResult<String> generateResult = iStorageClient.generateUrl(storageUrl, targetFileName, timeOut);
-            return generateResult;
-        } else {
-            //多文件下载
-            File zipDir = iDownloadService.buildZipDir();
-            File zipFile = iDownloadService.buildZipFile(zipDir, fileName);
-            IResult<Map<Long, String>> downloadResult = downloadFileToServer(storageUrls, zipDir.getAbsolutePath());
-            if (!downloadResult.isSuccess()) {
-                return DefaultResult.failResult(downloadResult.getMessage());
-            }
-            IResult<String> zipResult = ZipUtils.zipFile(zipFile, zipDir);
-            if (!zipResult.isSuccess()) {
-                return DefaultResult.failResult(zipResult.getMessage());
-            }
-            String zipStorageUrl = generateZipStorageUrl();
-            IResult<String> uploadResult = iStorageClient.uploadFile(zipFile, zipStorageUrl, null);
-            if (!uploadResult.isSuccess()) {
-                return DefaultResult.failResult(uploadResult.getMessage());
-            }
-            IResult<String> generateUrlResult = iStorageClient.generateUrl(zipStorageUrl, zipFile.getName(), timeOut);
-            return generateUrlResult;
         }
     }
 
@@ -132,7 +80,8 @@ public class StorageServiceImpl implements IStorageService {
         return DefaultResult.successResult(yozoFileRefPo);
     }
 
-    private String generateZipStorageUrl() {
+    @Override
+    public String generateZipStorageUrl() {
         String storageUrl = StorageConstant.DOCUMENT_PATH + StorageConstant.STORAGE_SEPARATOR
                 + StorageConstant.ZIP_PATH + StorageConstant.STORAGE_SEPARATOR
                 + DateViewUtils.format(new Date(), folderFormat) + StorageConstant.STORAGE_SEPARATOR

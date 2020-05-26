@@ -16,7 +16,8 @@ public enum EnumAppType {
     /**
      * 枚举值
      */
-    E_YZCLOUD_WEB(0, "yzcloud", "优云web端");
+    E_YZCLOUD_WEB(0, "yzcloud", "优云web端"),
+    E_TEST_APP(1, "test", "测试应用");
 
     private Integer appId;
     private String appName;

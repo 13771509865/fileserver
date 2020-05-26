@@ -22,7 +22,7 @@ import java.util.List;
  * @create 2020-05-06 14:39
  **/
 @Configuration
-@EnableWebMvc
+//@EnableWebMvc
 public class SpringMvcConfigure implements WebMvcConfigurer {
 
     @Autowired

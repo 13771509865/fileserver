@@ -45,7 +45,11 @@ public enum EnumResultCode {
     E_GENERATE_DOWNLOAD_URL_FAIL(1016, "生成文档下载Url失败"),
     E_DOWNLOAD_URL_EXPIRE(1017, "下载链接已失效"),
     E_DELETE_REAL_FILE_FAIL(1018, "删除真实文件失败"),
-    E_DELETE_FILE_FAIL(1019, "删除文件失败");
+    E_DELETE_FILE_FAIL(1019, "删除文件失败"),
+    E_OBS_STORAGE_FILE_FAIL(1020, "OBS保存上传文件失败"),
+    E_OBS_GENERATE_DOWNLOAD_URL_FAIL(1021, "obs生成文档下载链接失败"),
+    E_OSS_STORAGE_FILE_FAIL(1022, "OSS保存上传文件失败"),
+    E_OSS_GENERATE_DOWNLOAD_URL_FAIL(1022, "oss生成文档下载链接失败");
 
     private Integer value;
     private String info;

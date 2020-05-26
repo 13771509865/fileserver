@@ -20,9 +20,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig extends CachingConfigurerSupport {
 
     @Bean(name = "fileServerRedisTemplate")
-    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<Object, Object> redisTemplate(LettuceConnectionFactory redisConnectionFactory) {
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         template.setKeySerializer(stringRedisSerializer);
         template.setValueSerializer(buildJackson2JsonRedisSerializer());
@@ -44,4 +44,11 @@ public class RedisConfig extends CachingConfigurerSupport {
         return jackson2JsonRedisSerializer;
     }
 
+    /**
+     * 自定义session序列化器
+     */
+//    @Bean("springSessionDefaultRedisSerializer")
+//    public RedisSerializer setSerializer() {
+//        return buildJackson2JsonRedisSerializer();
+//    }
 }
