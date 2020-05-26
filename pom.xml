@@ -11,7 +11,7 @@
     <groupId>com.yozosoft</groupId>
     <artifactId>yozo-fileserver</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
     <name>yozo-fileserver</name>
     <description>文档存储模块</description>
 
@@ -35,15 +35,113 @@
         <swagger2markup.version>1.3.3</swagger2markup.version>
         <esdk-obs-java.version>3.19.7</esdk-obs-java.version>
         <aliyun-sdk-oss.version>3.9.1</aliyun-sdk-oss.version>
+        <yozo-fileserver.version>0.0.1-SNAPSHOT</yozo-fileserver.version>
+        <feign-okhttp.version>10.1.0</feign-okhttp.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.yozosoft</groupId>
-            <artifactId>yozo-boot-ep-starter</artifactId>
-            <version>${yozo-ep-starter.version}</version>
-        </dependency>
+    <modules>
+        <module>yozo-fileserver-api</module>
+        <module>yozo-fileserver-server</module>
+    </modules>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.yozosoft</groupId>
+                <artifactId>yozo-fileserver-api</artifactId>
+                <version>${yozo-fileserver.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.yozosoft</groupId>
+                <artifactId>yozo-fileserver-server</artifactId>
+                <version>${yozo-fileserver.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.yozosoft</groupId>
+                <artifactId>yozo-boot-ep-starter</artifactId>
+                <version>${yozo-ep-starter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper-starter.version}</version>
+            </dependency>
+
+            <!-- 数据库连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+            <!-- mybatis的依赖 -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-starter.version}</version>
+            </dependency>
+
+            <!-- 添加MySQL数据库驱动依赖 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.dm</groupId>
+                <artifactId>DmJdbcDriver18</artifactId>
+                <version>${dm.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.shardingsphere</groupId>
+                <artifactId>sharding-jdbc-core</artifactId>
+                <version>${shardingjdbc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.twmacinta</groupId>
+                <artifactId>fast-md5</artifactId>
+                <version>${fast-md5.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.ant</groupId>
+                <artifactId>ant</artifactId>
+                <version>${ant.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.huaweicloud</groupId>
+                <artifactId>esdk-obs-java</artifactId>
+                <version>${esdk-obs-java.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${aliyun-sdk-oss.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-okhttp</artifactId>
+                <version>${feign-okhttp.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -62,77 +160,10 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- spring session共享 -->
-        <dependency>
-            <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session-data-redis</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>${pagehelper-starter.version}</version>
-        </dependency>
-
-        <!-- 数据库连接池 -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-            <version>${druid.version}</version>
-        </dependency>
-
-        <!-- mybatis的依赖 -->
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${mybatis-starter.version}</version>
-        </dependency>
-
-        <!-- 添加MySQL数据库驱动依赖 -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql-connector.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.dm</groupId>
-            <artifactId>DmJdbcDriver18</artifactId>
-            <version>${dm.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${springfox-swagger-ui.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.shardingsphere</groupId>
-            <artifactId>sharding-jdbc-core</artifactId>
-            <version>${shardingjdbc.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.twmacinta</groupId>
-            <artifactId>fast-md5</artifactId>
-            <version>${fast-md5.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
         </dependency>
 
         <dependency>
@@ -142,43 +173,11 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>${ant.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>io.github.swagger2markup</groupId>
             <artifactId>swagger2markup</artifactId>
             <version>${swagger2markup.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.huaweicloud</groupId>
-            <artifactId>esdk-obs-java</artifactId>
-            <version>${esdk-obs-java.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.aliyun.oss</groupId>
-            <artifactId>aliyun-sdk-oss</artifactId>
-            <version>${aliyun-sdk-oss.version}</version>
-        </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.mybatis.generator</groupId>
-                <artifactId>mybatis-generator-maven-plugin</artifactId>
-                <version>1.3.7</version>
-            </plugin>
-        </plugins>
-    </build>
 
     <repositories>
         <repository>
@@ -187,5 +186,4 @@
             <url>http://nexus.yozocloud.cn/repository/maven-public/</url>
         </repository>
     </repositories>
-
 </project>
