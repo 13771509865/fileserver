@@ -20,7 +20,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipTests>true</skipTests>
-        <yozo-ep-starter.version>0.2.1-SNAPSHOT</yozo-ep-starter.version>
         <dm.version>1.1.45</dm.version>
         <druid.version>1.1.22</druid.version>
         <mybatis-starter.version>2.1.1</mybatis-starter.version>
@@ -29,14 +28,12 @@
         <springfox-swagger-ui.version>2.9.2</springfox-swagger-ui.version>
         <shardingjdbc.version>4.1.0</shardingjdbc.version>
         <fast-md5.version>2.7.1</fast-md5.version>
-        <fastjson.version>1.2.68</fastjson.version>
         <guava.version>29.0-jre</guava.version>
         <ant.version>1.10.7</ant.version>
         <swagger2markup.version>1.3.3</swagger2markup.version>
         <esdk-obs-java.version>3.19.7</esdk-obs-java.version>
         <aliyun-sdk-oss.version>3.9.1</aliyun-sdk-oss.version>
         <yozo-fileserver.version>0.0.1-SNAPSHOT</yozo-fileserver.version>
-        <feign-okhttp.version>10.1.0</feign-okhttp.version>
     </properties>
 
     <modules>
@@ -56,12 +53,6 @@
                 <groupId>com.yozosoft</groupId>
                 <artifactId>yozo-fileserver-server</artifactId>
                 <version>${yozo-fileserver.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.yozosoft</groupId>
-                <artifactId>yozo-boot-ep-starter</artifactId>
-                <version>${yozo-ep-starter.version}</version>
             </dependency>
 
             <dependency>
@@ -110,12 +101,6 @@
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant</artifactId>
                 <version>${ant.version}</version>
@@ -131,12 +116,6 @@
                 <groupId>com.aliyun.oss</groupId>
                 <artifactId>aliyun-sdk-oss</artifactId>
                 <version>${aliyun-sdk-oss.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.github.openfeign</groupId>
-                <artifactId>feign-okhttp</artifactId>
-                <version>${feign-okhttp.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
