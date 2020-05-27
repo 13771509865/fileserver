@@ -1,9 +1,9 @@
 package com.yozosoft.fileserver.interceptor;
 
 import com.yozosoft.common.exception.ForbiddenAccessException;
-import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.common.constants.SignConstant;
 import com.yozosoft.fileserver.config.FileServerProperties;
+import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.utils.FileServerVerifyUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +28,20 @@ public class SignInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String nonce = request.getHeader(SignConstant.NONCE);
-        String sign = request.getHeader(SignConstant.SIGN);
-        if (StringUtils.isBlank(nonce) || StringUtils.isBlank(sign)) {
-            throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
-        }
         Map<String, String[]> parameterMap = new HashMap<>();
         parameterMap.putAll(request.getParameterMap());
-        parameterMap.put(SignConstant.NONCE, new String[]{nonce});
-        Boolean verifyResult = FileServerVerifyUtil.verifySign(parameterMap, fileServerProperties.getSignSecret(), sign);
+        String[] nonceStr = parameterMap.get(SignConstant.NONCE);
+        String[] signStr = parameterMap.get(SignConstant.SIGN);
+        if (nonceStr == null || signStr == null || nonceStr.length < 1 || signStr.length < 1) {
+            String nonceHeader = request.getHeader(SignConstant.NONCE);
+            String signHeader = request.getHeader(SignConstant.SIGN);
+            if (StringUtils.isBlank(nonceHeader) || StringUtils.isBlank(signHeader)) {
+                throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
+            }
+            parameterMap.put(SignConstant.NONCE, new String[]{nonceHeader});
+            parameterMap.put(SignConstant.SIGN, new String[]{signHeader});
+        }
+        Boolean verifyResult = FileServerVerifyUtil.verifySign(parameterMap, fileServerProperties.getSignSecret(), parameterMap.get(SignConstant.SIGN)[0]);
         if (!verifyResult) {
             throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
         }

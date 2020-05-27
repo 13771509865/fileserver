@@ -49,7 +49,7 @@ public class SpringMvcConfigure implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(signInterceptor).addPathPatterns("/api/file/**").excludePathPatterns("/api/file/download/**");
+        registry.addInterceptor(signInterceptor).addPathPatterns("/api/file/**").excludePathPatterns("/api/file/download/**");
     }
 
     /**

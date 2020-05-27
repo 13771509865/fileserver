@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeleteFileDto {
+public class DeleteFileDto extends BaseSignDto{
 
     @NotEmpty(message = "需要删除的fileRefId为空")
     private List<Long> fileRefIds;

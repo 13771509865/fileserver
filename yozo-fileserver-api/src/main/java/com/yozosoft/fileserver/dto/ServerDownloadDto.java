@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ServerDownloadDto {
+public class ServerDownloadDto extends BaseSignDto{
 
     @NotBlank(message = "来源App未定义")
     private String appName;
