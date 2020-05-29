@@ -22,7 +22,7 @@ import java.util.Map;
  * @description fileserver feign api
  * @create 2020-05-26 17:11
  **/
-@ConditionalOnProperty(value = "fileserver.innerFeign.enable", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = "fileserver.innerFeign.enabled", havingValue = "true", matchIfMissing = true)
 @FeignClient(name = "fileserver", fallback = FileServerFeignApi.FileServerFeignApiFallBack.class)
 public interface FileServerFeignApi {
 
