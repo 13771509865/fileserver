@@ -10,7 +10,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -23,10 +23,10 @@ import java.util.Map;
 @FeignClient(name = "fileserver", fallback = FileServerFeignApi.FileServerFeignApiFallBack.class)
 public interface FileServerFeignApi {
 
-    @GetMapping("/api/file/serverDownload")
+    @PostMapping("/api/file/serverDownload")
     ResponseEntity<Map<String, Object>> downloadToServer(@Valid ServerDownloadDto serverDownloadDto);
 
-    @GetMapping("/api/file/downloadUrl")
+    @PostMapping("/api/file/downloadUrl")
     ResponseEntity<Map<String, Object>> getDownloadUrl(@Valid UserDownloadDto userDownloadDto);
 
     @DeleteMapping("/api/file/delete")

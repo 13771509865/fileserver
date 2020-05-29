@@ -7,7 +7,7 @@ import com.yozosoft.fileserver.common.utils.FastJsonUtils;
 import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.common.utils.Md5Utils;
 import com.yozosoft.fileserver.dto.DeleteFileDto;
-import com.yozosoft.fileserver.model.dto.UploadFileDto;
+import com.yozosoft.fileserver.dto.UploadFileDto;
 import com.yozosoft.fileserver.model.dto.UploadResultDto;
 import com.yozosoft.fileserver.model.dto.YozoFileRefDto;
 import com.yozosoft.fileserver.model.po.FileRefRelationPo;

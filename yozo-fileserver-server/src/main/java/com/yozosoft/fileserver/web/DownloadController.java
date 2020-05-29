@@ -1,12 +1,14 @@
 package com.yozosoft.fileserver.web;
 
-import com.yozosoft.fileserver.constants.EnumResultCode;
+import com.yozosoft.common.exception.ForbiddenAccessException;
+import com.yozosoft.fileserver.common.helper.SignHelper;
 import com.yozosoft.fileserver.common.utils.IResult;
-import com.yozosoft.fileserver.utils.JsonResultUtils;
-import com.yozosoft.fileserver.model.dto.LocalDownloadDto;
+import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.dto.ServerDownloadDto;
 import com.yozosoft.fileserver.dto.UserDownloadDto;
+import com.yozosoft.fileserver.model.dto.LocalDownloadDto;
 import com.yozosoft.fileserver.service.download.IDownloadManager;
+import com.yozosoft.fileserver.utils.JsonResultUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -15,10 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -37,10 +36,17 @@ public class DownloadController {
     @Autowired
     private IDownloadManager iDownloadManager;
 
+    @Autowired
+    private SignHelper signHelper;
+
     @ApiOperation(value = "下载文件到服务器制定目录")
-    @GetMapping("/serverDownload")
+    @PostMapping("/serverDownload")
     @ResponseBody
-    public ResponseEntity downloadToServer(@Valid ServerDownloadDto serverDownloadDto) {
+    public ResponseEntity downloadToServer(@Valid ServerDownloadDto serverDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
+        Boolean checkSignResult = signHelper.checkSign(serverDownloadDto, nonce, sign);
+        if (!checkSignResult) {
+            throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
+        }
         IResult<Map<Long, String>> downloadResult = iDownloadManager.serverDownload(serverDownloadDto);
         if (!downloadResult.isSuccess()) {
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_SERVER_DOWNLOAD_FAIL.getValue(), null, downloadResult.getMessage()));
@@ -49,9 +55,13 @@ public class DownloadController {
     }
 
     @ApiOperation(value = "获取下载链接")
-    @GetMapping("/downloadUrl")
+    @PostMapping("/downloadUrl")
     @ResponseBody
-    public ResponseEntity getDownloadUrl(@Valid UserDownloadDto userDownloadDto) {
+    public ResponseEntity getDownloadUrl(@Valid UserDownloadDto userDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
+        Boolean checkSignResult = signHelper.checkSign(userDownloadDto, nonce, sign);
+        if (!checkSignResult) {
+            throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
+        }
         IResult<String> downloadResult = iDownloadManager.getDownloadUrl(userDownloadDto);
         if (!downloadResult.isSuccess()) {
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_GENERATE_DOWNLOAD_URL_FAIL.getValue(), null, downloadResult.getMessage()));

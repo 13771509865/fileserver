@@ -1,6 +1,8 @@
 package com.yozosoft.fileserver.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.yozosoft.util.SecretSignatureUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -36,13 +38,29 @@ public class FileServerVerifyUtil {
         return stringBuffer.toString();
     }
 
+    @Deprecated
     public static String generateSign(Map<String, String[]> params, String secret) throws Exception {
         String str = uniqSortParams(params);
         return SecretSignatureUtils.hmacSHA256(str, secret);
     }
 
+    public static String generateJsonSign(Object object, String nonce, String secret) throws Exception {
+        String jsonStr = JSON.toJSONString(object);
+        jsonStr += nonce;
+        return SecretSignatureUtils.hmacSHA256(jsonStr, secret);
+    }
+
+    @Deprecated
     public static Boolean verifySign(Map<String, String[]> params, String secret, String sign) throws Exception {
         String generateSign = generateSign(params, secret);
+        return sign.equals(generateSign);
+    }
+
+    public static Boolean verifyJsonSign(Object object, String nonce, String secret, String sign) throws Exception {
+        if (StringUtils.isBlank(sign)) {
+            return false;
+        }
+        String generateSign = generateJsonSign(object, nonce, secret);
         return sign.equals(generateSign);
     }
 }

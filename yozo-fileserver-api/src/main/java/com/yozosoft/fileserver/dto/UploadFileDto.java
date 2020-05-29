@@ -1,6 +1,5 @@
-package com.yozosoft.fileserver.model.dto;
+package com.yozosoft.fileserver.dto;
 
-import com.yozosoft.fileserver.dto.BaseSignDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UploadFileDto extends BaseSignDto {
+public class UploadFileDto{
 
     @NotBlank(message = "上传文件md5为空")
     private String fileMd5;

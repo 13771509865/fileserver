@@ -1,13 +1,15 @@
 package com.yozosoft.fileserver.web;
 
-import com.yozosoft.fileserver.constants.EnumResultCode;
+import com.yozosoft.common.exception.ForbiddenAccessException;
+import com.yozosoft.fileserver.common.helper.SignHelper;
 import com.yozosoft.fileserver.common.utils.IResult;
-import com.yozosoft.fileserver.utils.JsonResultUtils;
+import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.dto.DeleteFileDto;
-import com.yozosoft.fileserver.model.dto.UploadFileDto;
+import com.yozosoft.fileserver.dto.UploadFileDto;
 import com.yozosoft.fileserver.model.dto.UploadResultDto;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.sourcefile.ISourceFileManager;
+import com.yozosoft.fileserver.utils.JsonResultUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +34,16 @@ public class SourceFileController {
     @Autowired
     private ISourceFileManager iSourceFileManager;
 
+    @Autowired
+    private SignHelper signHelper;
+
     @ApiOperation(value = "判断是否可以秒传")
     @GetMapping("/upload")
-    public ResponseEntity getFileBySecUpload(@Valid UploadFileDto uploadFileDto) {
+    public ResponseEntity getFileBySecUpload(@Valid UploadFileDto uploadFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
+        Boolean checkSignResult = signHelper.checkSign(uploadFileDto, nonce, sign);
+        if (!checkSignResult) {
+            throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
+        }
         IResult<YozoFileRefPo> checkResult = iSourceFileManager.checkCanSecUpload(uploadFileDto.getFileMd5(), uploadFileDto.getAppName());
         if (!checkResult.isSuccess()) {
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_FILE_SEC_UPLOAD_UNABLE.getValue(), null, checkResult.getMessage()));
@@ -45,7 +54,11 @@ public class SourceFileController {
 
     @ApiOperation(value = "真实上传文件")
     @PostMapping("/upload")
-    public ResponseEntity getFileByUpload(@RequestParam(value = "file") MultipartFile multipartFile, @Valid UploadFileDto uploadFileDto) {
+    public ResponseEntity getFileByUpload(@RequestParam(value = "file") MultipartFile multipartFile, @Valid UploadFileDto uploadFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
+        Boolean checkSignResult = signHelper.checkSign(uploadFileDto, nonce, sign);
+        if (!checkSignResult) {
+            throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
+        }
         IResult<YozoFileRefPo> storageResult = iSourceFileManager.storageFileAndSave(multipartFile, uploadFileDto);
         if (!storageResult.isSuccess()) {
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_UPLOAD_FILE_FAIL.getValue(), null, storageResult.getMessage()));
@@ -56,7 +69,11 @@ public class SourceFileController {
 
     @ApiOperation(value = "删除源文件")
     @DeleteMapping("/delete")
-    public ResponseEntity deleteFile(@Valid DeleteFileDto deleteFileDto) {
+    public ResponseEntity deleteFile(@Valid DeleteFileDto deleteFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
+        Boolean checkSignResult = signHelper.checkSign(deleteFileDto, nonce, sign);
+        if (!checkSignResult) {
+            throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
+        }
         IResult<String> deleteResult = iSourceFileManager.deleteFileRef(deleteFileDto);
         if (!deleteResult.isSuccess()) {
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_DELETE_FILE_FAIL.getValue(), null, deleteResult.getMessage()));
