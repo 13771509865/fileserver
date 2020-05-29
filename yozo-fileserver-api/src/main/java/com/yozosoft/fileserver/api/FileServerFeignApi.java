@@ -6,6 +6,7 @@ import com.yozosoft.fileserver.dto.ServerDownloadDto;
 import com.yozosoft.fileserver.dto.UserDownloadDto;
 import com.yozosoft.fileserver.utils.JsonResultUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import java.util.Map;
  * @description fileserver feign api
  * @create 2020-05-26 17:11
  **/
+@ConditionalOnProperty(value = "fileserver.innerFeign.enable", havingValue = "true", matchIfMissing = true)
 @FeignClient(name = "fileserver", fallback = FileServerFeignApi.FileServerFeignApiFallBack.class)
 public interface FileServerFeignApi {
 
