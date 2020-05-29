@@ -1,4 +1,4 @@
-package com.yozosoft.fileserver.common.utils;
+package com.yozosoft.fileserver.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;

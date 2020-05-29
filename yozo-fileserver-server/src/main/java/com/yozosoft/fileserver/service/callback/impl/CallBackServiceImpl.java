@@ -6,7 +6,7 @@ import com.yozosoft.fileserver.common.entity.HttpResultEntity;
 import com.yozosoft.fileserver.common.helper.AppCallBackHelper;
 import com.yozosoft.fileserver.common.helper.HttpApiHelper;
 import com.yozosoft.fileserver.common.utils.DefaultResult;
-import com.yozosoft.fileserver.common.utils.FastJsonUtils;
+import com.yozosoft.fileserver.utils.FastJsonUtils;
 import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.model.dto.YozoFileRefDto;
 import com.yozosoft.fileserver.service.callback.ICallBackService;

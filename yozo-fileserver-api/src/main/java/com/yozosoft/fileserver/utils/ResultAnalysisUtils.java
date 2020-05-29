@@ -15,8 +15,21 @@ public class ResultAnalysisUtils {
 
     private static final String message = "message";
 
+    public static Map<String, Object> getServerDownloadData(Map<String, Object> responseBody) {
+        if (responseBody == null) {
+            return null;
+        }
+        try {
+            Object obj = responseBody.get(data);
+            Map<String, Object> result = FastJsonUtils.parseJSON2Map(obj);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-    public static String getDownloadUrlBody(Map<String, Object> responseBody) {
+    public static String getDownloadUrlData(Map<String, Object> responseBody) {
         if (responseBody == null) {
             return "";
         }
