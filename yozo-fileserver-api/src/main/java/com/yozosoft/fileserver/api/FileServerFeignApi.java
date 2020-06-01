@@ -33,7 +33,7 @@ public interface FileServerFeignApi {
     ResponseEntity<Map<String, Object>> getDownloadUrl(@Valid UserDownloadDto userDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
 
     @DeleteMapping("/api/file/delete")
-    ResponseEntity deleteFile(@Valid DeleteFileDto deleteFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
+    ResponseEntity<Map<String, Object>> deleteFile(@Valid DeleteFileDto deleteFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
 
     @Slf4j
     @Component
@@ -54,7 +54,7 @@ public interface FileServerFeignApi {
         }
 
         @Override
-        public ResponseEntity deleteFile(@Valid DeleteFileDto deleteFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
+        public ResponseEntity<Map<String, Object>> deleteFile(@Valid DeleteFileDto deleteFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
             log.error("删除文件失败");
 //            return new ResponseEntity<>(JsonResultUtils.buildMapResultByResultCode(EnumResultCode.E_DELETE_FILE_FAIL), HttpStatus.INTERNAL_SERVER_ERROR);
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_DELETE_FILE_FAIL.getValue(), null, "删除文件熔断失败"));
