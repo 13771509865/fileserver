@@ -1,10 +1,6 @@
-package com.yozosoft.fileserver.common.constants;
+package com.yozosoft.fileserver.constants;
 
-import com.yozosoft.fileserver.common.utils.DefaultResult;
-import com.yozosoft.fileserver.common.utils.IResult;
-import com.yozosoft.fileserver.constants.EnumResultCode;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author zhoufeng
@@ -37,15 +33,5 @@ public enum EnumAppType {
             }
         }
         return null;
-    }
-
-    public static IResult<Integer> checkAppByName(String appName) {
-        if (StringUtils.isNotBlank(appName)) {
-            EnumAppType enumAppType = getEnum(appName);
-            if (enumAppType != null) {
-                return DefaultResult.successResult(enumAppType.getAppId());
-            }
-        }
-        return DefaultResult.failResult(EnumResultCode.E_APP_ID_ILLEGAL.getInfo());
     }
 }

@@ -1,6 +1,6 @@
 package com.yozosoft.fileserver.common.helper;
 
-import com.yozosoft.fileserver.common.constants.EnumAppType;
+import com.yozosoft.fileserver.constants.EnumAppType;
 import com.yozosoft.fileserver.common.entity.CallBackEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

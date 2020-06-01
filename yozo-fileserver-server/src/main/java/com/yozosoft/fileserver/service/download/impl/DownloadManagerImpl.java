@@ -1,13 +1,14 @@
 package com.yozosoft.fileserver.service.download.impl;
 
-import com.yozosoft.fileserver.common.constants.EnumAppType;
-import com.yozosoft.fileserver.constants.EnumResultCode;
+import com.yozosoft.fileserver.common.utils.AppUtils;
 import com.yozosoft.fileserver.common.utils.DefaultResult;
 import com.yozosoft.fileserver.common.utils.IResult;
+import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.dto.FileInfoDto;
 import com.yozosoft.fileserver.dto.ServerDownloadDto;
 import com.yozosoft.fileserver.dto.UserDownloadDto;
-import com.yozosoft.fileserver.model.dto.*;
+import com.yozosoft.fileserver.model.dto.FileRefInfoDto;
+import com.yozosoft.fileserver.model.dto.LocalDownloadDto;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.download.IDownloadManager;
 import com.yozosoft.fileserver.service.download.IDownloadService;
@@ -80,7 +81,7 @@ public class DownloadManagerImpl implements IDownloadManager {
     }
 
     private IResult<List<FileRefInfoDto>> checkAndGetStorageUrls(String appName, List<FileInfoDto> fileInfos) {
-        IResult<Integer> checkAppResult = EnumAppType.checkAppByName(appName);
+        IResult<Integer> checkAppResult = AppUtils.checkAppByName(appName);
         if (!checkAppResult.isSuccess()) {
             return DefaultResult.failResult(checkAppResult.getMessage());
         }

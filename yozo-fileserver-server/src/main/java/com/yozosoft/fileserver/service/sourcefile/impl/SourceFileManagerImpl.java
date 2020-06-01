@@ -1,11 +1,10 @@
 package com.yozosoft.fileserver.service.sourcefile.impl;
 
-import com.yozosoft.fileserver.common.constants.EnumAppType;
-import com.yozosoft.fileserver.constants.EnumResultCode;
+import com.yozosoft.fileserver.common.utils.AppUtils;
 import com.yozosoft.fileserver.common.utils.DefaultResult;
-import com.yozosoft.fileserver.utils.FastJsonUtils;
 import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.common.utils.Md5Utils;
+import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.dto.DeleteFileDto;
 import com.yozosoft.fileserver.dto.UploadFileDto;
 import com.yozosoft.fileserver.model.dto.UploadResultDto;
@@ -18,6 +17,7 @@ import com.yozosoft.fileserver.service.refrelation.IRefRelationService;
 import com.yozosoft.fileserver.service.sourcefile.ISourceFileManager;
 import com.yozosoft.fileserver.service.sourcefile.ISourceFileService;
 import com.yozosoft.fileserver.service.storage.IStorageManager;
+import com.yozosoft.fileserver.utils.FastJsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class SourceFileManagerImpl implements ISourceFileManager {
 
     @Override
     public IResult<YozoFileRefPo> checkCanSecUpload(String fileMd5, String appName) {
-        IResult<Integer> checkAppResult = EnumAppType.checkAppByName(appName);
+        IResult<Integer> checkAppResult = AppUtils.checkAppByName(appName);
         if (!checkAppResult.isSuccess()) {
             return DefaultResult.failResult(checkAppResult.getMessage());
         }
@@ -83,7 +83,7 @@ public class SourceFileManagerImpl implements ISourceFileManager {
     @Override
     public IResult<YozoFileRefPo> storageFileAndSave(MultipartFile multipartFile, UploadFileDto uploadFileDto) {
         try {
-            IResult<Integer> checkAppResult = EnumAppType.checkAppByName(uploadFileDto.getAppName());
+            IResult<Integer> checkAppResult = AppUtils.checkAppByName(uploadFileDto.getAppName());
             if (!checkAppResult.isSuccess()) {
                 return DefaultResult.failResult(checkAppResult.getMessage());
             }
@@ -109,7 +109,7 @@ public class SourceFileManagerImpl implements ISourceFileManager {
 
     @Override
     public IResult<String> deleteFileRef(DeleteFileDto deleteFileDto) {
-        IResult<Integer> checkAppResult = EnumAppType.checkAppByName(deleteFileDto.getAppName());
+        IResult<Integer> checkAppResult = AppUtils.checkAppByName(deleteFileDto.getAppName());
         if (!checkAppResult.isSuccess()) {
             return DefaultResult.failResult(checkAppResult.getMessage());
         }
