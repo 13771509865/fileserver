@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 @Slf4j
-public class ClearTempFileJob {
+public class ClearFileJob {
 
     @Autowired
     private ClearFileHelper clearFileHelper;
@@ -29,6 +29,8 @@ public class ClearTempFileJob {
     private RedisService<String> redisService;
 
     private static final String ClearJobLockName = "clearJobLock";
+
+    private static final String ClearEmptyDirJobLockName = "clearEmptyDirJobLock";
 
      /*"0 0 12 * * ?" 每天中午十二点触发 "0 15 10 ? * *" 每天早上10：15触发 "0 15 10 * * ?"
     每天早上10：15触发 "0 15 10 * * ? *" 每天早上10：15触发 "0 15 10 * * ? 2005" 2005年的每天早上10：15触发
@@ -54,6 +56,23 @@ public class ClearTempFileJob {
             //目前是定的一天一清理
             clearFileHelper.clearFile(clearPath, TimeConstant.MILLISECOND_OF_DAY);
             redisService.delete(ClearJobLockName);
+        }
+    }
+
+    /**
+     * @description 自动清理空文件夹
+     * @author zhoufeng
+     * @date 2019/2/11
+     */
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void clearEmptyDir() {
+        //不支持redis集群模式
+        boolean flag = redisService.setnx(ClearEmptyDirJobLockName, DateViewUtils.getNowFull(), 12 * TimeConstant.SECOND_OF_HOUR);
+        if (flag) {
+            String clearPath = fileServerProperties.getDownloadRoot();
+            //目前是定的一天一清理
+            clearFileHelper.clearEmptyDir(clearPath);
+            redisService.delete(ClearEmptyDirJobLockName);
         }
     }
 }

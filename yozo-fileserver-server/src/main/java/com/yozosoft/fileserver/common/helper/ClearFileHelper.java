@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -58,6 +59,26 @@ public class ClearFileHelper {
             });
         } catch (Exception e) {
             log.info("清理过期文件线程异常");
+        }
+    }
+
+    public void clearEmptyDir(String path) {
+        log.info("=======================================开始清理空文件夹=======================================");
+        File clearRootFile = new File(path);
+        if (clearRootFile.isDirectory()) {
+            deleteEmptyDir(clearRootFile);
+        }
+        log.info("=======================================结束清理空文件夹=======================================");
+    }
+
+    private void deleteEmptyDir(File dir) {
+        File[] dirs = dir.listFiles();
+        for (int i = 0; i < dirs.length; i++) {
+            if (dirs[i].isDirectory()) {
+                deleteEmptyDir(dirs[i]);
+            }
+        }
+        if (dir.isDirectory() && dir.delete()) {
         }
     }
 }
