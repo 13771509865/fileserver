@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -45,28 +44,28 @@ public interface FileServerFeignApi {
     class FileServerFeignApiFallBack implements FileServerFeignApi {
 
         @Override
-        public ResponseEntity<Map<String, Object>> downloadToServer(@Valid ServerDownloadDto serverDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
+        public ResponseEntity<Map<String, Object>> downloadToServer(@RequestBody ServerDownloadDto serverDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
             log.error("下载文件到服务器失败");
 //            return new ResponseEntity<>(JsonResultUtils.buildMapResultByResultCode(EnumResultCode.E_SERVER_DOWNLOAD_FAIL), HttpStatus.INTERNAL_SERVER_ERROR);
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_SERVER_DOWNLOAD_FAIL.getValue(), null, "下载文件到服务器熔断失败"));
         }
 
         @Override
-        public ResponseEntity<Map<String, Object>> getDownloadUrl(@Valid UserDownloadDto userDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
+        public ResponseEntity<Map<String, Object>> getDownloadUrl(@RequestBody UserDownloadDto userDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
             log.error("获取文件下载链接失败");
 //            return new ResponseEntity<>(JsonResultUtils.buildMapResultByResultCode(EnumResultCode.E_GENERATE_DOWNLOAD_URL_FAIL), HttpStatus.INTERNAL_SERVER_ERROR);
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_GENERATE_DOWNLOAD_URL_FAIL.getValue(), null, "生成文档下载Url熔断失败"));
         }
 
         @Override
-        public ResponseEntity<Map<String, Object>> deleteFile(@Valid DeleteFileDto deleteFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
+        public ResponseEntity<Map<String, Object>> deleteFile(@RequestBody DeleteFileDto deleteFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
             log.error("删除文件失败");
 //            return new ResponseEntity<>(JsonResultUtils.buildMapResultByResultCode(EnumResultCode.E_DELETE_FILE_FAIL), HttpStatus.INTERNAL_SERVER_ERROR);
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_DELETE_FILE_FAIL.getValue(), null, "删除文件熔断失败"));
         }
 
         @Override
-        public ResponseEntity<Map<String, Object>> uploadByServer(@Valid ServerUploadFileDto serverUploadFileDto, String nonce, String sign) {
+        public ResponseEntity<Map<String, Object>> uploadByServer(@RequestBody ServerUploadFileDto serverUploadFileDto, String nonce, String sign) {
             log.error("服务器端上传文件失败");
 //            return new ResponseEntity<>(JsonResultUtils.buildMapResultByResultCode(EnumResultCode.E_DELETE_FILE_FAIL), HttpStatus.INTERNAL_SERVER_ERROR);
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_UPLOAD_FILE_FAIL.getValue(), null, "服务端上传文件熔断失败"));
