@@ -37,7 +37,7 @@ public interface FileServerFeignApi {
     ResponseEntity<Map<String, Object>> deleteFile(@Valid DeleteFileDto deleteFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
 
     @PostMapping("/api/file/serverUpload")
-    ResponseEntity uploadByServer(@Valid ServerUploadFileDto serverUploadFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
+    ResponseEntity<Map<String, Object>> uploadByServer(@Valid ServerUploadFileDto serverUploadFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
 
     @Slf4j
     @Component
@@ -65,7 +65,7 @@ public interface FileServerFeignApi {
         }
 
         @Override
-        public ResponseEntity uploadByServer(@Valid ServerUploadFileDto serverUploadFileDto, String nonce, String sign) {
+        public ResponseEntity<Map<String, Object>> uploadByServer(@Valid ServerUploadFileDto serverUploadFileDto, String nonce, String sign) {
             log.error("服务器端上传文件失败");
 //            return new ResponseEntity<>(JsonResultUtils.buildMapResultByResultCode(EnumResultCode.E_DELETE_FILE_FAIL), HttpStatus.INTERNAL_SERVER_ERROR);
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_UPLOAD_FILE_FAIL.getValue(), null, "服务端上传文件熔断失败"));
