@@ -18,8 +18,10 @@
 
     <properties>
         <yozo-ep-starter.version>0.2.1-SNAPSHOT</yozo-ep-starter.version>
-        <feign-okhttp.version>10.1.0</feign-okhttp.version>
+        <feign-okhttp.version>11.0</feign-okhttp.version>
         <fastjson.version>1.2.68</fastjson.version>
+        <feign-httpclient.version>11.0</feign-httpclient.version>
+        <openfeign.version>2.2.2.RELEASE</openfeign.version>
     </properties>
 
     <dependencies>
@@ -39,6 +41,18 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-httpclient</artifactId>
+            <version>${feign-httpclient.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>${openfeign.version}</version>
         </dependency>
     </dependencies>
 

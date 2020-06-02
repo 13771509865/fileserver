@@ -41,7 +41,7 @@ public class SourceFileController {
 
     @ApiOperation(value = "服务端上传文件")
     @PostMapping("/serverUpload")
-    public ResponseEntity uploadByServer(@Valid ServerUploadFileDto serverUploadFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
+    public ResponseEntity uploadByServer(@RequestBody @Valid ServerUploadFileDto serverUploadFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
         Boolean checkSignResult = signHelper.checkSign(serverUploadFileDto, nonce, sign);
         if (!checkSignResult) {
             throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
@@ -85,7 +85,7 @@ public class SourceFileController {
 
     @ApiOperation(value = "删除源文件")
     @DeleteMapping("/delete")
-    public ResponseEntity deleteFile(@Valid DeleteFileDto deleteFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
+    public ResponseEntity deleteFile(@RequestBody @Valid DeleteFileDto deleteFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
         Boolean checkSignResult = signHelper.checkSign(deleteFileDto, nonce, sign);
         if (!checkSignResult) {
             throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());

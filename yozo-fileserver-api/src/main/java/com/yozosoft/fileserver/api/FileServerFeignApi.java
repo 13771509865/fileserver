@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
@@ -28,16 +29,16 @@ import java.util.Map;
 public interface FileServerFeignApi {
 
     @PostMapping("/api/file/serverDownload")
-    ResponseEntity<Map<String, Object>> downloadToServer(@Valid ServerDownloadDto serverDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
+    ResponseEntity<Map<String, Object>> downloadToServer(@RequestBody ServerDownloadDto serverDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
 
     @PostMapping("/api/file/downloadUrl")
-    ResponseEntity<Map<String, Object>> getDownloadUrl(@Valid UserDownloadDto userDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
+    ResponseEntity<Map<String, Object>> getDownloadUrl(@RequestBody UserDownloadDto userDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
 
     @DeleteMapping("/api/file/delete")
-    ResponseEntity<Map<String, Object>> deleteFile(@Valid DeleteFileDto deleteFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
+    ResponseEntity<Map<String, Object>> deleteFile(@RequestBody DeleteFileDto deleteFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
 
     @PostMapping("/api/file/serverUpload")
-    ResponseEntity<Map<String, Object>> uploadByServer(@Valid ServerUploadFileDto serverUploadFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
+    ResponseEntity<Map<String, Object>> uploadByServer(@RequestBody ServerUploadFileDto serverUploadFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
 
     @Slf4j
     @Component

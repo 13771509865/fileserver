@@ -42,7 +42,7 @@ public class DownloadController {
     @ApiOperation(value = "下载文件到服务器制定目录")
     @PostMapping("/serverDownload")
     @ResponseBody
-    public ResponseEntity downloadToServer(@Valid ServerDownloadDto serverDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
+    public ResponseEntity downloadToServer(@RequestBody @Valid ServerDownloadDto serverDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
         Boolean checkSignResult = signHelper.checkSign(serverDownloadDto, nonce, sign);
         if (!checkSignResult) {
             throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
@@ -57,7 +57,7 @@ public class DownloadController {
     @ApiOperation(value = "获取下载链接")
     @PostMapping("/downloadUrl")
     @ResponseBody
-    public ResponseEntity getDownloadUrl(@Valid UserDownloadDto userDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
+    public ResponseEntity getDownloadUrl(@RequestBody @Valid UserDownloadDto userDownloadDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
         Boolean checkSignResult = signHelper.checkSign(userDownloadDto, nonce, sign);
         if (!checkSignResult) {
             throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
