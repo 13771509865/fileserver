@@ -1,7 +1,9 @@
 package com.yozosoft.fileserver.service.sourcefile.impl;
 
+import com.yozosoft.common.exception.YozoServiceException;
 import com.yozosoft.fileserver.common.utils.DefaultResult;
 import com.yozosoft.fileserver.common.utils.IResult;
+import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.model.po.FileRefRelationPo;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.fileref.IFileRefService;
@@ -48,8 +50,9 @@ public class SourceFileServiceImpl implements ISourceFileService {
                 String storageUrl = getStorageUrl(yozoFileRefPos, fileRefId);
                 IResult<String> deleteResult = iStorageManager.deleteFile(storageUrl);
                 if (!deleteResult.isSuccess()) {
-                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                    return DefaultResult.failResult(deleteResult.getMessage());
+                    throw new YozoServiceException(EnumResultCode.E_DELETE_REAL_FILE_FAIL.getValue(), EnumResultCode.E_DELETE_REAL_FILE_FAIL.getInfo());
+//                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//                    return DefaultResult.failResult(deleteResult.getMessage());
                 }
             }
         }
