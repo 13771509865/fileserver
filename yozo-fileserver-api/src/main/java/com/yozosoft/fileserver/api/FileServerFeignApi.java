@@ -3,6 +3,7 @@ package com.yozosoft.fileserver.api;
 import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.dto.DeleteFileDto;
 import com.yozosoft.fileserver.dto.ServerDownloadDto;
+import com.yozosoft.fileserver.dto.ServerUploadFileDto;
 import com.yozosoft.fileserver.dto.UserDownloadDto;
 import com.yozosoft.fileserver.utils.JsonResultUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,9 @@ public interface FileServerFeignApi {
     @DeleteMapping("/api/file/delete")
     ResponseEntity<Map<String, Object>> deleteFile(@Valid DeleteFileDto deleteFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
 
+    @PostMapping("/api/file/serverUpload")
+    ResponseEntity uploadByServer(@Valid ServerUploadFileDto serverUploadFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
+
     @Slf4j
     @Component
     class FileServerFeignApiFallBack implements FileServerFeignApi {
@@ -58,6 +62,13 @@ public interface FileServerFeignApi {
             log.error("删除文件失败");
 //            return new ResponseEntity<>(JsonResultUtils.buildMapResultByResultCode(EnumResultCode.E_DELETE_FILE_FAIL), HttpStatus.INTERNAL_SERVER_ERROR);
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_DELETE_FILE_FAIL.getValue(), null, "删除文件熔断失败"));
+        }
+
+        @Override
+        public ResponseEntity uploadByServer(@Valid ServerUploadFileDto serverUploadFileDto, String nonce, String sign) {
+            log.error("服务器端上传文件失败");
+//            return new ResponseEntity<>(JsonResultUtils.buildMapResultByResultCode(EnumResultCode.E_DELETE_FILE_FAIL), HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_UPLOAD_FILE_FAIL.getValue(), null, "服务端上传文件熔断失败"));
         }
     }
 }

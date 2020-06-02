@@ -64,6 +64,12 @@ public class StorageServiceImpl implements IStorageService {
     }
 
     @Override
+    public IResult<String> storageFile(File file, String storageUrl, Map<String, Object> userMetadata) {
+        IResult<String> uploadResult = iStorageClient.uploadFile(file, storageUrl, userMetadata);
+        return uploadResult;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public IResult<YozoFileRefPo> saveFileInfo(YozoFileRefPo yozoFileRefPo, Integer appId) {
         IResult<Long> insertResult = iFileRefService.insertFileRefPo(yozoFileRefPo);

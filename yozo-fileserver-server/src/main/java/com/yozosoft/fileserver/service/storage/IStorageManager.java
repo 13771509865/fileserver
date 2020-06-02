@@ -5,6 +5,7 @@ import com.yozosoft.fileserver.model.dto.FileRefInfoDto;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,8 @@ public interface IStorageManager {
      * @return
      */
     IResult<YozoFileRefPo> storageFile(MultipartFile multipartFile, String storageUrl, Map<String, Object> userMetadata, String fileMd5, Integer appId);
+
+    IResult<YozoFileRefPo> storageFile(File file, String storageUrl, Map<String, Object> userMetadata, String fileMd5, Integer appId);
 
     IResult<String> deleteFile(String storageUrl);
 

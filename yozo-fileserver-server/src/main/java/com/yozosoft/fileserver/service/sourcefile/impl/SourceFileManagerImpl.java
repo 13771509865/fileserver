@@ -6,6 +6,8 @@ import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.common.utils.Md5Utils;
 import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.dto.DeleteFileDto;
+import com.yozosoft.fileserver.dto.ServerUploadFileDto;
+import com.yozosoft.fileserver.dto.ServerUploadResultDto;
 import com.yozosoft.fileserver.dto.UploadFileDto;
 import com.yozosoft.fileserver.model.dto.UploadResultDto;
 import com.yozosoft.fileserver.model.dto.YozoFileRefDto;
@@ -24,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,6 +103,41 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             }
             IResult<YozoFileRefPo> storageResult = iStorageManager.storageFile(multipartFile, storageUrl, userMetadata, fileMd5, appId);
             return storageResult;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("上传文件并保存异常", e);
+            return DefaultResult.failResult(EnumResultCode.E_UPLOAD_FILE_FAIL.getInfo());
+        }
+    }
+
+    @Override
+    public IResult<ServerUploadResultDto> storageFileAndSave(ServerUploadFileDto serverUploadFileDto) {
+        try {
+            IResult<Integer> checkAppResult = AppUtils.checkAppByName(serverUploadFileDto.getAppName());
+            if (!checkAppResult.isSuccess()) {
+                return DefaultResult.failResult(checkAppResult.getMessage());
+            }
+            Integer appId = checkAppResult.getData();
+            File storageFile = new File(serverUploadFileDto.getFilePath());
+            if (!storageFile.isFile()) {
+                return DefaultResult.failResult(EnumResultCode.E_SERVER_UPLOAD_PATH_NOT_EXIST.getInfo());
+            }
+            String fileMd5 = Md5Utils.getMD5(storageFile);
+            YozoFileRefPo yozoFileRefPo = iFileRefService.getFileRefByMd5(fileMd5);
+            if (yozoFileRefPo != null) {
+                return DefaultResult.successResult(new ServerUploadResultDto(yozoFileRefPo.getId(), true));
+            }
+            //上传文件
+            String storageUrl = iStorageManager.generateStorageUrl(storageFile.getName());
+            Map<String, Object> userMetadata = new HashMap<>();
+            if (StringUtils.isNotBlank(serverUploadFileDto.getUserMetadata())) {
+                userMetadata = FastJsonUtils.parseJSON2Map(serverUploadFileDto.getUserMetadata());
+            }
+            IResult<YozoFileRefPo> storageResult = iStorageManager.storageFile(storageFile, storageUrl, userMetadata, fileMd5, appId);
+            if (!storageResult.isSuccess()) {
+                return DefaultResult.failResult(storageResult.getMessage());
+            }
+            return DefaultResult.successResult(new ServerUploadResultDto(storageResult.getData().getId(), false));
         } catch (Exception e) {
             e.printStackTrace();
             log.error("上传文件并保存异常", e);

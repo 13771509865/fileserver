@@ -1,8 +1,8 @@
 package com.yozosoft.fileserver.service.storage.impl;
 
-import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.common.constants.StorageConstant;
 import com.yozosoft.fileserver.common.utils.*;
+import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.model.dto.FileRefInfoDto;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.download.IDownloadService;
@@ -63,6 +63,16 @@ public class StorageManagerImpl implements IStorageManager {
             return DefaultResult.failResult(storageResult.getMessage());
         }
         YozoFileRefPo yozoFileRefPo = iFileRefService.buildYozoFileRefPo(fileMd5, storageUrl, multipartFile.getSize());
+        return iStorageService.saveFileInfo(yozoFileRefPo, appId);
+    }
+
+    @Override
+    public IResult<YozoFileRefPo> storageFile(File file, String storageUrl, Map<String, Object> userMetadata, String fileMd5, Integer appId) {
+        IResult<String> storageResult = iStorageService.storageFile(file, storageUrl, userMetadata);
+        if (!storageResult.isSuccess()) {
+            return DefaultResult.failResult(storageResult.getMessage());
+        }
+        YozoFileRefPo yozoFileRefPo = iFileRefService.buildYozoFileRefPo(fileMd5, storageUrl, file.length());
         return iStorageService.saveFileInfo(yozoFileRefPo, appId);
     }
 

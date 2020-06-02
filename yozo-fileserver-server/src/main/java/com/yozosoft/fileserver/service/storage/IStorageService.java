@@ -4,6 +4,7 @@ import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -26,4 +27,6 @@ public interface IStorageService {
     IResult<YozoFileRefPo> saveFileInfo(YozoFileRefPo yozoFileRefPo, Integer appId);
 
     String generateZipStorageUrl();
+
+    IResult<String> storageFile(File file, String storageUrl, Map<String, Object> userMetadata);
 }

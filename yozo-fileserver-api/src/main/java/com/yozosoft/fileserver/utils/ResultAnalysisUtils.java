@@ -1,5 +1,7 @@
 package com.yozosoft.fileserver.utils;
 
+import com.yozosoft.fileserver.dto.ServerUploadResultDto;
+
 import java.util.Map;
 
 /**
@@ -14,6 +16,19 @@ public class ResultAnalysisUtils {
     private static final String data = "data";
 
     private static final String message = "message";
+
+    public static ServerUploadResultDto getServerUploadResult(Map<String, Object> responseBody) {
+        if (responseBody == null) {
+            return null;
+        }
+        try {
+            Object obj = responseBody.get(data);
+            return FastJsonUtils.json2obj(obj, ServerUploadResultDto.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public static Map<String, Object> getServerDownloadData(Map<String, Object> responseBody) {
         if (responseBody == null) {

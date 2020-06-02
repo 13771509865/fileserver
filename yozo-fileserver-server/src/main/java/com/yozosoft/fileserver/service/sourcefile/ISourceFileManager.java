@@ -2,6 +2,8 @@ package com.yozosoft.fileserver.service.sourcefile;
 
 import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.dto.DeleteFileDto;
+import com.yozosoft.fileserver.dto.ServerUploadFileDto;
+import com.yozosoft.fileserver.dto.ServerUploadResultDto;
 import com.yozosoft.fileserver.dto.UploadFileDto;
 import com.yozosoft.fileserver.model.dto.UploadResultDto;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
@@ -27,4 +29,6 @@ public interface ISourceFileManager {
     IResult<YozoFileRefPo> storageFileAndSave(MultipartFile multipartFile, UploadFileDto uploadFileDto);
 
     IResult<String> deleteFileRef(DeleteFileDto deleteFileDto);
+
+    IResult<ServerUploadResultDto> storageFileAndSave(ServerUploadFileDto serverUploadFileDto);
 }

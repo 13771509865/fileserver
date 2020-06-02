@@ -5,6 +5,8 @@ import com.yozosoft.fileserver.common.helper.SignHelper;
 import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.dto.DeleteFileDto;
+import com.yozosoft.fileserver.dto.ServerUploadFileDto;
+import com.yozosoft.fileserver.dto.ServerUploadResultDto;
 import com.yozosoft.fileserver.dto.UploadFileDto;
 import com.yozosoft.fileserver.model.dto.UploadResultDto;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
@@ -36,6 +38,20 @@ public class SourceFileController {
 
     @Autowired
     private SignHelper signHelper;
+
+    @ApiOperation(value = "服务端上传文件")
+    @PostMapping("/serverUpload")
+    public ResponseEntity uploadByServer(@Valid ServerUploadFileDto serverUploadFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {
+        Boolean checkSignResult = signHelper.checkSign(serverUploadFileDto, nonce, sign);
+        if (!checkSignResult) {
+            throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
+        }
+        IResult<ServerUploadResultDto> storageResult = iSourceFileManager.storageFileAndSave(serverUploadFileDto);
+        if (!storageResult.isSuccess()) {
+            return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_UPLOAD_FILE_FAIL.getValue(), null, storageResult.getMessage()));
+        }
+        return ResponseEntity.ok(JsonResultUtils.successMapResult(storageResult.getData()));
+    }
 
     @ApiOperation(value = "判断是否可以秒传")
     @GetMapping("/upload")
