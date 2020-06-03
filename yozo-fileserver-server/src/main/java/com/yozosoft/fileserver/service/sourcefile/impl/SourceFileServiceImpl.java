@@ -1,10 +1,7 @@
 package com.yozosoft.fileserver.service.sourcefile.impl;
 
-import com.yozosoft.common.exception.YozoServiceException;
 import com.yozosoft.fileserver.common.utils.DefaultResult;
 import com.yozosoft.fileserver.common.utils.IResult;
-import com.yozosoft.fileserver.constants.EnumResultCode;
-import com.yozosoft.fileserver.model.po.FileRefRelationPo;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.fileref.IFileRefService;
 import com.yozosoft.fileserver.service.refrelation.IRefRelationService;
@@ -16,7 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,20 +40,31 @@ public class SourceFileServiceImpl implements ISourceFileService {
     public IResult<String> checkAndDeleteFile(List<YozoFileRefPo> yozoFileRefPos, List<Long> fileRefIds, Integer appId) {
         //TODO 这种删除要不要判断
         Boolean relationDelete = iRefRelationService.deleteRefRelation(fileRefIds, appId);
-        for (Long fileRefId : fileRefIds) {
-            List<FileRefRelationPo> fileRefRelationPos = iRefRelationService.selectByQuery(fileRefId, null);
-            if (fileRefRelationPos == null || fileRefRelationPos.isEmpty()) {
-                //为空表示没有关联了
-                iFileRefService.deleteByIds(Arrays.asList(fileRefId));
-                String storageUrl = getStorageUrl(yozoFileRefPos, fileRefId);
-                IResult<String> deleteResult = iStorageManager.deleteFile(storageUrl);
-                if (!deleteResult.isSuccess()) {
-                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                    return DefaultResult.failResult(deleteResult.getMessage());
-                }
+        List<Long> usedFileRefIds = iRefRelationService.selectUsedFileRefIds(fileRefIds);
+        List<Long> deleteFileRefIds = getDeleteFileRefIds(fileRefIds, usedFileRefIds);
+        iFileRefService.deleteByIds(deleteFileRefIds);
+        //删除物理文件
+        for (Long fileRefId : deleteFileRefIds) {
+            String storageUrl = getStorageUrl(yozoFileRefPos, fileRefId);
+            IResult<String> deleteResult = iStorageManager.deleteFile(storageUrl);
+            if (!deleteResult.isSuccess()) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return DefaultResult.failResult(deleteResult.getMessage());
             }
         }
         return DefaultResult.successResult();
+    }
+
+    private List<Long> getDeleteFileRefIds(List<Long> fileRefIds, List<Long> usedFileRefIds) {
+        if (usedFileRefIds == null || usedFileRefIds.isEmpty()) {
+            return fileRefIds;
+        }
+        //深拷贝
+        List<Long> result = new ArrayList<>();
+        Collections.addAll(result, new Long[fileRefIds.size()]);
+        Collections.copy(result, fileRefIds);
+        result.removeAll(usedFileRefIds);
+        return result;
     }
 
     private String getStorageUrl(List<YozoFileRefPo> yozoFileRefPos, Long fileRefId) {

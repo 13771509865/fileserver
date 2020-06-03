@@ -11,8 +11,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.servlet.config.annotation.*;
 
+import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -27,6 +30,14 @@ public class SpringMvcConfigure implements WebMvcConfigurer {
 
     @Autowired
     private SignInterceptor signInterceptor;
+
+    /**
+     * 不加 东方通有问题
+     */
+    @Bean
+    public PlatformTransactionManager txManager(DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
 
     /**
      * @description 配置静态资源, 避免静态资源被拦截

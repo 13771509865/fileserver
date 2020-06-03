@@ -46,7 +46,7 @@
         <foreach item="item" index="index" collection="fileRefIds"
                  open="(" separator="," close=")">
             ${item}
-        </foreach> group by FILEREF_ID having count(*) >0
+        </foreach> group by FILEREF_ID
     </select>
 
     <insert id="insertSelective" parameterType="com.yozosoft.fileserver.model.po.FileRefRelationPo">
