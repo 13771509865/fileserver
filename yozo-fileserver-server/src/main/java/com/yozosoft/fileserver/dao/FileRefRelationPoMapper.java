@@ -13,5 +13,5 @@ public interface FileRefRelationPoMapper {
 
     int deleteByRefIdAndAppId(@Param("fileRefIds") List<Long> fileRefId, @Param("appId") Integer appId);
 
-    List<Long> selectUsedFileRefIds(@Param("fileRedIds") List<Long> fileRefIds);
+    List<Long> selectUsedFileRefIds(@Param("fileRefIds") List<Long> fileRefIds);
 }
