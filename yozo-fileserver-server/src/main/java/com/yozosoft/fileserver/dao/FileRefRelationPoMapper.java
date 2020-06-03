@@ -12,4 +12,6 @@ public interface FileRefRelationPoMapper {
     List<FileRefRelationPo> selectByQuery(@Param("fileRefId") Long fileRefId, @Param("appId") Integer appId);
 
     int deleteByRefIdAndAppId(@Param("fileRefIds") List<Long> fileRefId, @Param("appId") Integer appId);
+
+    List<Long> selectUsedFileRefIds(@Param("fileRedIds") List<Long> fileRefIds);
 }

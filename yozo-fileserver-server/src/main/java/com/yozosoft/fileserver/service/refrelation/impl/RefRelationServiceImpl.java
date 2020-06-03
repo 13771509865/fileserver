@@ -63,4 +63,9 @@ public class RefRelationServiceImpl implements IRefRelationService {
         int result = fileRefRelationPoMapper.deleteByRefIdAndAppId(fileRefIds, appId);
         return result > 0;
     }
+
+    @Override
+    public List<Long> selectUsedFileRefIds(List<Long> fileRefIds) {
+        return fileRefRelationPoMapper.selectUsedFileRefIds(fileRefIds);
+    }
 }

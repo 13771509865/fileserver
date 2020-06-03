@@ -31,4 +31,6 @@ public interface IRefRelationService {
     List<FileRefRelationPo> selectByQuery(Long fileRefId, Integer appId);
 
     Boolean deleteRefRelation(List<Long> fileRefIds, Integer appId);
+
+    List<Long> selectUsedFileRefIds(List<Long> fileRefIds);
 }
