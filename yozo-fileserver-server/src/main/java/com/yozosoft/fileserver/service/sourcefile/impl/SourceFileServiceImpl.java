@@ -50,9 +50,8 @@ public class SourceFileServiceImpl implements ISourceFileService {
                 String storageUrl = getStorageUrl(yozoFileRefPos, fileRefId);
                 IResult<String> deleteResult = iStorageManager.deleteFile(storageUrl);
                 if (!deleteResult.isSuccess()) {
-                    throw new YozoServiceException(EnumResultCode.E_DELETE_REAL_FILE_FAIL.getValue(), EnumResultCode.E_DELETE_REAL_FILE_FAIL.getInfo());
-//                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-//                    return DefaultResult.failResult(deleteResult.getMessage());
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return DefaultResult.failResult(deleteResult.getMessage());
                 }
             }
         }
