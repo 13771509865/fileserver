@@ -168,7 +168,7 @@ public class SourceFileManagerImpl implements ISourceFileManager {
 
     private UploadResultDto buildUploadResultDto(YozoFileRefDto yozoFileRefDto, Map<String, Object> appResponseData) {
         UploadResultDto uploadResultDto = new UploadResultDto();
-        uploadResultDto.setId(yozoFileRefDto.getId());
+        uploadResultDto.setId(yozoFileRefDto.getFileRefId());
         uploadResultDto.setFileSize(yozoFileRefDto.getFileSize());
         uploadResultDto.setAppResponseData(appResponseData);
         return uploadResultDto;

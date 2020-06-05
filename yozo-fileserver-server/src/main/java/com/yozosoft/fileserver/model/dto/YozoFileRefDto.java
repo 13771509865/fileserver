@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class YozoFileRefDto {
 
-    private Long id;
+    private Long fileRefId;
 
     private Long fileSize;
 

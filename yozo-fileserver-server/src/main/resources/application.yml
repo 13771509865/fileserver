@@ -107,7 +107,7 @@ app:
   callback:
     yzcloud:
       enable: true
-      url: http://www.baidu.com
+      url: http://192.168.60.106:9000/epdrive/completeUpload
 
 #客户端配置
 feign:

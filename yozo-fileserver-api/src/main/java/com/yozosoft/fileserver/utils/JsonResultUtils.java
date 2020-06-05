@@ -95,11 +95,6 @@ public class JsonResultUtils {
 
     public static Map<String, Object> buildMapResult(Integer result, Object data, String message) {
         Map<String, Object> params = new HashMap<>();
-        if (data instanceof String) {
-            Map<String, Object> dataMap = new HashMap<>();
-            dataMap.put("data", data);
-            data = dataMap;
-        }
         // 本次请求是否成功
         params.put("errorCode", result);
         // 用户封装信息，典型的是检验出错信息
