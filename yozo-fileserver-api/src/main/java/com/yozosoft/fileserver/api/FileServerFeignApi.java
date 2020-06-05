@@ -24,7 +24,7 @@ import java.util.Map;
  * @create 2020-05-26 17:11
  **/
 @ConditionalOnProperty(value = "fileserver.innerFeign.enabled", havingValue = "true", matchIfMissing = true)
-@FeignClient(name = "${fileserver.innerFeign.name:fileserver}", path = "${fileserver.innerFeign.path:''}", fallback = FileServerFeignApi.FileServerFeignApiFallBack.class)
+@FeignClient(name = "${fileserver.innerFeign.name:fileserver}", path = "${fileserver.innerFeign.path:#{null}}", fallback = FileServerFeignApi.FileServerFeignApiFallBack.class)
 public interface FileServerFeignApi {
 
     @PostMapping("/api/file/serverDownload")
