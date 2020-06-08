@@ -6,8 +6,8 @@ import com.yozosoft.fileserver.common.utils.DateViewUtils;
 import com.yozosoft.fileserver.common.utils.UUIDHelper;
 import com.yozosoft.fileserver.config.FileServerProperties;
 import com.yozosoft.fileserver.dto.FileInfoDto;
-import com.yozosoft.fileserver.model.dto.FileRefInfoDto;
 import com.yozosoft.fileserver.dto.ServerDownloadDto;
+import com.yozosoft.fileserver.model.dto.FileRefInfoDto;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.download.IDownloadService;
 import org.apache.commons.io.FilenameUtils;
@@ -36,7 +36,7 @@ public class DownloadServiceImpl implements IDownloadService {
         if (StringUtils.isNotBlank(fileName)) {
             String extension = FilenameUtils.getExtension(storageUrl);
             if (StringUtils.isNotBlank(extension)) {
-                return fileName + "." + extension;
+                return FilenameUtils.getBaseName(fileName) + "." + extension;
             }
             return fileName;
         }
