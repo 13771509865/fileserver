@@ -127,3 +127,6 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 6000   #hystrix的超时时间需要大于ribbon的超时时间
+  threadpool:
+    default:
+      coreSize: 150   #默认并发10
