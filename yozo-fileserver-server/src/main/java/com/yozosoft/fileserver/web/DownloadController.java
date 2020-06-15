@@ -2,6 +2,7 @@ package com.yozosoft.fileserver.web;
 
 import com.yozosoft.common.exception.ForbiddenAccessException;
 import com.yozosoft.fileserver.common.helper.SignHelper;
+import com.yozosoft.fileserver.common.utils.HttpUtils;
 import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.dto.ServerDownloadDto;
@@ -85,7 +86,8 @@ public class DownloadController {
 
     private HttpHeaders buildHttpHeaders(String fileName) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment;filename=" + fileName.replaceAll("\\+", "%20"));
+        String encodeFileName = HttpUtils.urlEncode(fileName);
+        headers.add("Content-Disposition", "attachment;filename=" + encodeFileName + ";filename*=UTF-8''"+encodeFileName);
         return headers;
     }
 }
