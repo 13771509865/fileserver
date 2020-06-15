@@ -44,7 +44,7 @@ public class CallBackServiceImpl implements ICallBackService {
             }
             IResult<HttpResultEntity> callBackResult = httpApiHelper.doPost(appCallBackUrl, FastJsonUtils.parseJSON2Map(yozoFileRefDto));
             if (!httpApiHelper.isHttpSuccess(callBackResult)) {
-                log.error("上传完成请求回调失败,请求地址为:" + appCallBackUrl + ",请求responseCode为:" + callBackResult.getData().getCode());
+                log.error("上传完成请求回调失败,请求地址为:" + appCallBackUrl);
                 return DefaultResult.failResult(EnumResultCode.E_APP_CALLBACK_FAIL.getInfo());
             }
             HttpResultEntity httpResultEntity = callBackResult.getData();
