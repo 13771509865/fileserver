@@ -13,6 +13,8 @@ public class StorageConstant {
 
     public static final String HW_OBS_STORAGE_TYPE_ID = "2";
 
+    public static final String MINIO_STORAGE_TYPE_ID = "3";
+
     public static final String STORAGE_SEPARATOR = "/";
 
     public static final String DOCUMENT_PATH = "document";

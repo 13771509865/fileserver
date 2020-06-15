@@ -15,7 +15,8 @@ public enum EnumStorageType {
      */
     E_LOCAL_STORAGE(0, "local", "本地存储"),
     E_ALI_OSS_STORAGE(1, "aliOss", "阿里Oss对象存储"),
-    E_HW_OBS_STORAGE(2, "hwObs", "华为Obs对象存储");
+    E_HW_OBS_STORAGE(2, "hwObs", "华为Obs对象存储"),
+    E_MINIO_STORAGE(3, "minio", "minio存储");
 
     private Integer typeId;
     private String typeName;
