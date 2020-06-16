@@ -92,12 +92,12 @@ http:
 yfs:
   workId: 1         #范围是0-1024
   storage:
-    type: 0         #0-本地存储，1-Oss，2-Obs
+    type: 3         #0-本地存储，1-Oss，2-Obs, 3-minio
     localRootPath: D:/fcs      #针对本地存储设置的存储根目录
-    endPoint:
-    accessKey:
-    secretKey:
-    bucketName:
+    endPoint: http://localhost:8000
+    accessKey: minioadmin
+    secretKey: minioadmin
+    bucketName: local
   downloadRoot: D:/fcs/download
   tempPath: D:/fcs/temp
   downloadDomain: http://192.168.0.126:9001
