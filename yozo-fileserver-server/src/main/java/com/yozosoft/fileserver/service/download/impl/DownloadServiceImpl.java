@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.*;
+import java.util.regex.Matcher;
 
 /**
  * @author zhoufeng
@@ -50,6 +51,7 @@ public class DownloadServiceImpl implements IDownloadService {
             storageDir = fileServerProperties.getDownloadRoot() + StorageConstant.STORAGE_SEPARATOR + serverDownloadDto.getAppName() + StorageConstant.STORAGE_SEPARATOR + DateViewUtils.format(new Date(), folderFormat)
                     + StorageConstant.STORAGE_SEPARATOR + UUIDHelper.generateUUID();
         }
+        storageDir = storageDir.replaceAll("(\\\\|/)", Matcher.quoteReplacement(File.separator));
         return storageDir;
     }
 
