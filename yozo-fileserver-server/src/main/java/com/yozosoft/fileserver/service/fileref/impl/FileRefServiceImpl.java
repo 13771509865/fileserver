@@ -1,9 +1,9 @@
 package com.yozosoft.fileserver.service.fileref.impl;
 
-import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.common.utils.DateViewUtils;
 import com.yozosoft.fileserver.common.utils.DefaultResult;
 import com.yozosoft.fileserver.common.utils.IResult;
+import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.dao.YozoFileRefPoMapper;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.fileref.IFileRefService;
@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author zhoufeng
@@ -72,7 +74,15 @@ public class FileRefServiceImpl implements IFileRefService {
     @Override
     public IResult<List<YozoFileRefPo>> buildStorageUrls(List<Long> fileRefIds, Integer appId) {
         List<YozoFileRefPo> yozoFileRefPos = selectByCheckApp(fileRefIds, appId);
-        if (yozoFileRefPos == null || yozoFileRefPos.isEmpty() || fileRefIds.size() != yozoFileRefPos.size()) {
+        if (yozoFileRefPos == null || yozoFileRefPos.isEmpty()) {
+            return DefaultResult.failResult(EnumResultCode.E_APP_FILE_NUM_ILLEGAL.getInfo());
+        }
+        Set<Long> fileRefIdSet = new HashSet<>(fileRefIds);
+        Set<Long> querySet = new HashSet<>();
+        for (YozoFileRefPo yozoFileRefPo : yozoFileRefPos) {
+            querySet.add(yozoFileRefPo.getId());
+        }
+        if (!fileRefIdSet.equals(querySet)) {
             return DefaultResult.failResult(EnumResultCode.E_APP_FILE_NUM_ILLEGAL.getInfo());
         }
         return DefaultResult.successResult(yozoFileRefPos);

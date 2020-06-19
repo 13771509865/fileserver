@@ -58,11 +58,12 @@ public class DownloadServiceImpl implements IDownloadService {
     @Override
     public List<FileRefInfoDto> buildFileRefInfos(List<YozoFileRefPo> fileRefs, List<FileInfoDto> fileInfos) {
         List<FileRefInfoDto> result = new ArrayList<>();
-        Map<Long, String> fileNameMap = buildFileNameMap(fileInfos);
-        for (YozoFileRefPo yozoFileRefPo : fileRefs) {
-            Long fileRefId = yozoFileRefPo.getId();
-            String fileName = fileNameMap.get(fileRefId);
-            FileRefInfoDto fileRefInfoDto = new FileRefInfoDto(fileRefId, yozoFileRefPo.getStorageUrl(), fileName);
+        Map<Long, YozoFileRefPo> yozoFileRefPoMap = buildYozoFileRefPoMap(fileRefs);
+        for (FileInfoDto fileInfoDto : fileInfos) {
+            Long fileRefId = fileInfoDto.getFileRefId();
+            String fileName = fileInfoDto.getFileName();
+            String storageUrl = yozoFileRefPoMap.get(fileRefId).getStorageUrl();
+            FileRefInfoDto fileRefInfoDto = new FileRefInfoDto(fileRefId, storageUrl, fileName);
             result.add(fileRefInfoDto);
         }
         return result;
@@ -96,11 +97,11 @@ public class DownloadServiceImpl implements IDownloadService {
         return expireTime;
     }
 
-    private Map<Long, String> buildFileNameMap(List<FileInfoDto> fileInfos) {
-        Map<Long, String> fileNameMap = new HashMap<>(fileInfos.size());
-        for (FileInfoDto fileInfoDto : fileInfos) {
-            fileNameMap.put(fileInfoDto.getFileRefId(), fileInfoDto.getFileName());
+    private Map<Long, YozoFileRefPo> buildYozoFileRefPoMap(List<YozoFileRefPo> fileRefs) {
+        Map<Long, YozoFileRefPo> result = new HashMap<>(fileRefs.size());
+        for (YozoFileRefPo yozoFileRefPo : fileRefs) {
+            result.put(yozoFileRefPo.getId(), yozoFileRefPo);
         }
-        return fileNameMap;
+        return result;
     }
 }
