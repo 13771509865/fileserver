@@ -49,7 +49,7 @@ public class GlobalDefaultExceptionHandler {
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     @ResponseBody
-    public ResponseEntity maxFileExceptionHandler(MaxUploadSizeExceededException e){
+    public ResponseEntity maxFileExceptionHandler(MaxUploadSizeExceededException e) {
         return ResponseEntity.ok(JsonResultUtils.buildMapResultByResultCode(EnumResultCode.E_UPLOAD_FILE_SIZE_OVERSIZE));
     }
 
