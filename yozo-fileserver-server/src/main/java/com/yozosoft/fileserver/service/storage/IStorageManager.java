@@ -41,5 +41,5 @@ public interface IStorageManager {
 
     IResult<Map<Long, String>> downloadFileToServer(List<FileRefInfoDto> storageUrls, String storageDir);
 
-    IResult<String> generateDownloadUrl(List<FileRefInfoDto> storageUrls, String fileName, Long timeOut);
+    IResult<String> generateDownloadUrl(List<FileRefInfoDto> storageUrls, String zipFileName, Long timeOut, Boolean needZip);
 }

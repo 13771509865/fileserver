@@ -104,8 +104,8 @@ public class StorageManagerImpl implements IStorageManager {
     }
 
     @Override
-    public IResult<String> generateDownloadUrl(List<FileRefInfoDto> storageUrls, String fileName, Long timeOut) {
-        if (storageUrls.size() == 1) {
+    public IResult<String> generateDownloadUrl(List<FileRefInfoDto> storageUrls, String zipFileName, Long timeOut, Boolean needZip) {
+        if (storageUrls.size() == 1 && !needZip) {
             //单文件下载
             FileRefInfoDto fileRefInfoDto = storageUrls.get(0);
             String storageUrl = fileRefInfoDto.getStorageUrl();
@@ -115,7 +115,7 @@ public class StorageManagerImpl implements IStorageManager {
         } else {
             //多文件下载
             File zipDir = iDownloadService.buildZipDir();
-            File zipFile = iDownloadService.buildZipFile(zipDir, fileName);
+            File zipFile = iDownloadService.buildZipFile(zipDir, zipFileName);
             IResult<Map<Long, String>> downloadResult = downloadFileToServer(storageUrls, zipDir.getAbsolutePath());
             if (!downloadResult.isSuccess()) {
                 return DefaultResult.failResult(downloadResult.getMessage());

@@ -24,7 +24,9 @@ public class UserDownloadDto {
     @NotEmpty(message = "需要下载的fileRefId为空")
     private List<FileInfoDto> fileInfos;
 
-    private String fileName;
+    private String zipFileName;
+
+    private Boolean needZip;
 
     private Long timeOut;
 }

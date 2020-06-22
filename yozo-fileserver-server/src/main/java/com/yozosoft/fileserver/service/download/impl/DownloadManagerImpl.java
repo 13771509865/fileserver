@@ -60,7 +60,8 @@ public class DownloadManagerImpl implements IDownloadManager {
         if (!checkResult.isSuccess()) {
             return DefaultResult.failResult(checkResult.getMessage());
         }
-        return iStorageManager.generateDownloadUrl(checkResult.getData(), userDownloadDto.getFileName(), iDownloadService.buildTimeOut(userDownloadDto.getTimeOut()));
+        Boolean needZip = userDownloadDto.getNeedZip() == null ? false : userDownloadDto.getNeedZip();
+        return iStorageManager.generateDownloadUrl(checkResult.getData(), userDownloadDto.getZipFileName(), iDownloadService.buildTimeOut(userDownloadDto.getTimeOut()), needZip);
     }
 
     @Override

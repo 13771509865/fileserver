@@ -17,4 +17,6 @@ public class FileInfoDto {
     private Long fileRefId;
 
     private String fileName;
+
+    private String fileRelativePath;
 }
