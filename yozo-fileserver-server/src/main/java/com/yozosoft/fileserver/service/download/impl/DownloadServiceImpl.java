@@ -84,7 +84,7 @@ public class DownloadServiceImpl implements IDownloadService {
         if (StringUtils.isBlank(fileName)) {
             fileName = StorageConstant.MULTIPLE_DOWNLOAD_FILENAME;
         }
-        File zipFile = new File(zipDir, fileName + ".zip");
+        File zipFile = new File(zipDir, FilenameUtils.getBaseName(fileName) + ".zip");
         if (zipFile.exists()) {
             zipFile.delete();
         }
