@@ -16,6 +16,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,12 @@ public class GlobalDefaultExceptionHandler {
     @ResponseBody
     public ResponseEntity yozoExceptionHandler(YozoServiceException e) {
         return new ResponseEntity(JsonResultUtils.buildMapResult(e.getCode(), null, e.getMessage()), HttpStatus.valueOf(200));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @ResponseBody
+    public ResponseEntity maxFileExceptionHandler(MaxUploadSizeExceededException e){
+        return ResponseEntity.ok(JsonResultUtils.buildMapResultByResultCode(EnumResultCode.E_UPLOAD_FILE_SIZE_OVERSIZE));
     }
 
     @ExceptionHandler(Throwable.class)

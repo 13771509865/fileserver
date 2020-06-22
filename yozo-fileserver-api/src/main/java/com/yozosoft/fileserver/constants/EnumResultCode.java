@@ -18,6 +18,7 @@ public enum EnumResultCode {
     E_SERVER_UNKNOWN_ERROR(3, "服务器未知错误^_^"),
     E_SERVER_BUSY_ERROR(4, "服务器正忙请稍后再试"),
     E_REQUEST_ILLEGAL(5, "非法的访问请求"),
+    E_UPLOAD_FILE_SIZE_OVERSIZE(6, "文件大小超出大小限制"),
 
     E_HTTP_SEND_FAIL(10, "http请求失败"),
     E_ZIP_FILE_FAIL(11, "压缩文件失败"),
