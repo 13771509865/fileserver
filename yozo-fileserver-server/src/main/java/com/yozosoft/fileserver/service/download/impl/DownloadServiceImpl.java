@@ -35,9 +35,11 @@ public class DownloadServiceImpl implements IDownloadService {
     @Override
     public String getTargetFileName(String fileName, String storageUrl) {
         if (StringUtils.isNotBlank(fileName)) {
-            String extension = FilenameUtils.getExtension(storageUrl);
-            if (StringUtils.isNotBlank(extension)) {
-                return FilenameUtils.getBaseName(fileName) + "." + extension;
+            if (StringUtils.isBlank(FilenameUtils.getExtension(fileName))) {
+                String extension = FilenameUtils.getExtension(storageUrl);
+                if (StringUtils.isNotBlank(extension)) {
+                    return FilenameUtils.getBaseName(fileName) + "." + extension;
+                }
             }
             return fileName;
         }
