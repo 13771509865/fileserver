@@ -64,8 +64,9 @@ public class DownloadServiceImpl implements IDownloadService {
         for (FileInfoDto fileInfoDto : fileInfos) {
             Long fileRefId = fileInfoDto.getFileRefId();
             String fileName = fileInfoDto.getFileName();
+            String fileRelativePath = fileInfoDto.getFileRelativePath();
             String storageUrl = yozoFileRefPoMap.get(fileRefId).getStorageUrl();
-            FileRefInfoDto fileRefInfoDto = new FileRefInfoDto(fileRefId, storageUrl, fileName);
+            FileRefInfoDto fileRefInfoDto = new FileRefInfoDto(fileRefId, storageUrl, fileName, fileRelativePath);
             result.add(fileRefInfoDto);
         }
         return result;

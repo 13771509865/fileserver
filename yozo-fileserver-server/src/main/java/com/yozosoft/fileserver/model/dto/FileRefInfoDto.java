@@ -19,4 +19,6 @@ public class FileRefInfoDto {
     private String storageUrl;
 
     private String fileName;
+
+    private String fileRelativePath;
 }

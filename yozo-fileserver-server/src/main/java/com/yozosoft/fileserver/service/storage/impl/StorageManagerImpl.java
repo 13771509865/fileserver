@@ -89,8 +89,14 @@ public class StorageManagerImpl implements IStorageManager {
         Map<Long, String> result = new HashMap<>(storageUrls.size());
         for (FileRefInfoDto fileRefInfoDto : storageUrls) {
             String storageUrl = fileRefInfoDto.getStorageUrl();
+            String fileRelativePath = fileRefInfoDto.getFileRelativePath();
             String targetFileName = iDownloadService.getTargetFileName(fileRefInfoDto.getFileName(), storageUrl);
-            File targetFile = new File(storageDir, targetFileName);
+            File targetFile = null;
+            if (StringUtils.isNotBlank(fileRelativePath)) {
+                targetFile = new File(storageDir, fileRelativePath + File.separator + targetFileName);
+            } else {
+                targetFile = new File(storageDir, targetFileName);
+            }
             if (targetFile.exists()) {
                 targetFile.delete();
             }
