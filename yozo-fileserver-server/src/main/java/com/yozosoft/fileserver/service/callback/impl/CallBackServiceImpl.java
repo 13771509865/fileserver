@@ -33,6 +33,8 @@ public class CallBackServiceImpl implements ICallBackService {
     @Autowired
     private HttpApiHelper httpApiHelper;
 
+    private static final String CODE = "code";
+
     @Override
     public IResult<Map<String, Object>> sendCallBackUrlByApp(String appName, YozoFileRefDto yozoFileRefDto) {
         Map<String, Object> resultMap = new HashMap<>();
@@ -48,6 +50,13 @@ public class CallBackServiceImpl implements ICallBackService {
                 return DefaultResult.failResult(EnumResultCode.E_APP_CALLBACK_FAIL.getInfo());
             }
             HttpResultEntity httpResultEntity = callBackResult.getData();
+            Map<String, Object> responseMap = FastJsonUtils.parseJSON2Map(httpResultEntity.getBody());
+            Integer code = Integer.valueOf(responseMap.get(CODE).toString());
+            if(!EnumResultCode.E_SUCCESS.getValue().equals(code)){
+                //返回业务状态码失败
+                log.error("上传完成请求回调失败,业务返回code非成功,请求地址为:" + appCallBackUrl+",业务code为"+code);
+                return DefaultResult.failResult(EnumResultCode.E_APP_CALLBACK_FAIL.getInfo()+",code为"+code);
+            }
             resultMap = FastJsonUtils.parseJSON2Map(httpResultEntity);
         }
         return DefaultResult.successResult(resultMap);

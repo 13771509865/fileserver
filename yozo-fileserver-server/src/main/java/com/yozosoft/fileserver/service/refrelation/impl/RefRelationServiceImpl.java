@@ -1,6 +1,8 @@
 package com.yozosoft.fileserver.service.refrelation.impl;
 
 import com.yozosoft.fileserver.common.utils.DateViewUtils;
+import com.yozosoft.fileserver.common.utils.DefaultResult;
+import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.dao.FileRefRelationPoMapper;
 import com.yozosoft.fileserver.model.po.FileRefRelationPo;
 import com.yozosoft.fileserver.service.refrelation.IRefRelationService;
@@ -29,12 +31,12 @@ public class RefRelationServiceImpl implements IRefRelationService {
     private SnowflakeShardingKeyGenerator snowflakeShardingKeyGenerator;
 
     @Override
-    public Boolean insertRefRelationPo(FileRefRelationPo fileRefRelationPo) {
+    public IResult<Boolean> insertRefRelationPo(FileRefRelationPo fileRefRelationPo) {
         try {
             int insertResult = fileRefRelationPoMapper.insertSelective(fileRefRelationPo);
-            return insertResult > 0;
+            return insertResult > 0 ? DefaultResult.successResult(false) : DefaultResult.failResult();
         } catch (DataIntegrityViolationException dataIntegrityViolationException) {
-            return true;
+            return DefaultResult.successResult(true);
         }
     }
 

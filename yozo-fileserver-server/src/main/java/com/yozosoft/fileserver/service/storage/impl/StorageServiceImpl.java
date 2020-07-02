@@ -1,12 +1,12 @@
 package com.yozosoft.fileserver.service.storage.impl;
 
-import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.common.constants.StorageConstant;
 import com.yozosoft.fileserver.common.utils.DateViewUtils;
 import com.yozosoft.fileserver.common.utils.DefaultResult;
 import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.common.utils.UUIDHelper;
 import com.yozosoft.fileserver.config.FileServerProperties;
+import com.yozosoft.fileserver.constants.EnumResultCode;
 import com.yozosoft.fileserver.model.po.FileRefRelationPo;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.fileref.IFileRefService;
@@ -50,7 +50,7 @@ public class StorageServiceImpl implements IStorageService {
     public IResult<String> storageFile(MultipartFile multipartFile, String storageUrl, Map<String, Object> userMetadata) {
         try {
             File storageTempFile = new File(fileServerProperties.getTempPath(), storageUrl);
-            if(!storageTempFile.getParentFile().exists()){
+            if (!storageTempFile.getParentFile().exists()) {
                 storageTempFile.getParentFile().mkdirs();
             }
             multipartFile.transferTo(storageTempFile);
@@ -79,8 +79,8 @@ public class StorageServiceImpl implements IStorageService {
         Long fileRefId = insertResult.getData();
         yozoFileRefPo.setId(fileRefId);
         FileRefRelationPo fileRefRelationPo = iRefRelationService.buildFileRefRelationPo(fileRefId, appId);
-        Boolean relationResult = iRefRelationService.insertRefRelationPo(fileRefRelationPo);
-        if (!relationResult) {
+        IResult<Boolean> relationResult = iRefRelationService.insertRefRelationPo(fileRefRelationPo);
+        if (!relationResult.isSuccess()) {
             return DefaultResult.failResult(EnumResultCode.E_FILE_APP_RELATION_SAVE_FAIL.getInfo());
         }
         return DefaultResult.successResult(yozoFileRefPo);

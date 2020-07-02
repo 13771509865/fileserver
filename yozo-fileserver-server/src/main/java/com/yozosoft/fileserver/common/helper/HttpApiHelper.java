@@ -41,7 +41,8 @@ public class HttpApiHelper {
         if (result.isSuccess()) {
             HttpResultEntity httpResultEntity = result.getData();
             Integer httpCode = httpResultEntity.getCode();
-            if (httpCode >= HttpStatus.OK.value() && httpCode < HttpStatus.MULTIPLE_CHOICES.value()) {
+            String body = httpResultEntity.getBody();
+            if (StringUtils.isNotBlank(body) && httpCode >= HttpStatus.OK.value() && httpCode < HttpStatus.MULTIPLE_CHOICES.value()) {
                 return true;
             }
         }

@@ -1,5 +1,6 @@
 package com.yozosoft.fileserver.service.refrelation;
 
+import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.model.po.FileRefRelationPo;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface IRefRelationService {
      * @param fileRefRelationPo 插入对象
      * @return 结果
      */
-    Boolean insertRefRelationPo(FileRefRelationPo fileRefRelationPo);
+    IResult<Boolean> insertRefRelationPo(FileRefRelationPo fileRefRelationPo);
 
     /**
      * 构建ref app关系对象
