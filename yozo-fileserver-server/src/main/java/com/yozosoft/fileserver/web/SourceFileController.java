@@ -53,6 +53,20 @@ public class SourceFileController {
         return ResponseEntity.ok(JsonResultUtils.successMapResult(storageResult.getData()));
     }
 
+    @ApiOperation(value = "服务端上传文件")
+    @PostMapping("/serverUploadByFile")
+    public ResponseEntity serverUploadByFile(@RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign, @RequestParam(value = "file") MultipartFile multipartFile, ServerUploadFileDto serverUploadFileDto){
+        Boolean checkSignResult = signHelper.checkSign(serverUploadFileDto, nonce, sign);
+        if (!checkSignResult) {
+            throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
+        }
+        IResult<ServerUploadResultDto> storageResult = iSourceFileManager.storageFileAndSave(multipartFile, serverUploadFileDto);
+        if (!storageResult.isSuccess()) {
+            return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_UPLOAD_FILE_FAIL.getValue(), null, storageResult.getMessage()));
+        }
+        return ResponseEntity.ok(JsonResultUtils.successMapResult(storageResult.getData()));
+    }
+
     @ApiOperation(value = "判断是否可以秒传")
     @GetMapping("/upload")
     public ResponseEntity getFileBySecUpload(@Valid UploadFileDto uploadFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -38,6 +39,9 @@ public interface FileServerFeignApi {
 
     @PostMapping("/api/file/serverUpload")
     ResponseEntity<Map<String, Object>> uploadByServer(@RequestBody ServerUploadFileDto serverUploadFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
+
+    @PostMapping("/api/file/serverUploadByFile")
+    ResponseEntity<Map<String, Object>> serverUploadByFile(@RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign, @RequestParam(value = "file") MultipartFile multipartFile, ServerUploadFileDto serverUploadFileDto);
 
     @Slf4j
     @Component
@@ -66,6 +70,13 @@ public interface FileServerFeignApi {
 
         @Override
         public ResponseEntity<Map<String, Object>> uploadByServer(@RequestBody ServerUploadFileDto serverUploadFileDto, String nonce, String sign) {
+            log.error("服务器端上传文件失败");
+//            return new ResponseEntity<>(JsonResultUtils.buildMapResultByResultCode(EnumResultCode.E_DELETE_FILE_FAIL), HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_UPLOAD_FILE_FAIL.getValue(), null, "服务端上传文件熔断失败"));
+        }
+
+        @Override
+        public ResponseEntity<Map<String, Object>> serverUploadByFile(String nonce, String sign, MultipartFile multipartFile, ServerUploadFileDto serverUploadFileDto) {
             log.error("服务器端上传文件失败");
 //            return new ResponseEntity<>(JsonResultUtils.buildMapResultByResultCode(EnumResultCode.E_DELETE_FILE_FAIL), HttpStatus.INTERNAL_SERVER_ERROR);
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_UPLOAD_FILE_FAIL.getValue(), null, "服务端上传文件熔断失败"));

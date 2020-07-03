@@ -31,4 +31,6 @@ public interface ISourceFileManager {
     IResult<String> deleteFileRef(DeleteFileDto deleteFileDto);
 
     IResult<ServerUploadResultDto> storageFileAndSave(ServerUploadFileDto serverUploadFileDto);
+
+    IResult<ServerUploadResultDto> storageFileAndSave(MultipartFile multipartFile, ServerUploadFileDto serverUploadFileDto);
 }

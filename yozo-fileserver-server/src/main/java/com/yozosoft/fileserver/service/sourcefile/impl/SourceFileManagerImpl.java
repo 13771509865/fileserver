@@ -139,20 +139,40 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             YozoFileRefPo yozoFileRefPo = iFileRefService.getFileRefByMd5(fileMd5);
             if (yozoFileRefPo != null) {
                 //插入relation表
-                FileRefRelationPo fileRefRelationPo = iRefRelationService.buildFileRefRelationPo(yozoFileRefPo.getId(), checkAppResult.getData());
-                IResult<Boolean> relationResult = iRefRelationService.insertRefRelationPo(fileRefRelationPo);
-                if (!relationResult.isSuccess()) {
-                    return DefaultResult.failResult(EnumResultCode.E_FILE_APP_RELATION_SAVE_FAIL.getInfo());
-                }
-                return DefaultResult.successResult(new ServerUploadResultDto(yozoFileRefPo.getId(), relationResult.getData()));
+                return insertRefRelation(yozoFileRefPo, appId);
             }
             //上传文件
             String storageUrl = iStorageManager.generateStorageUrl(storageFile.getName());
-            Map<String, Object> userMetadata = new HashMap<>();
-            if (StringUtils.isNotBlank(serverUploadFileDto.getUserMetadata())) {
-                userMetadata = FastJsonUtils.parseJSON2Map(serverUploadFileDto.getUserMetadata());
-            }
+            Map<String, Object> userMetadata = builduserMetadata(serverUploadFileDto.getUserMetadata());
             IResult<YozoFileRefPo> storageResult = iStorageManager.storageFile(storageFile, storageUrl, userMetadata, fileMd5, appId);
+            if (!storageResult.isSuccess()) {
+                return DefaultResult.failResult(storageResult.getMessage());
+            }
+            return DefaultResult.successResult(new ServerUploadResultDto(storageResult.getData().getId(), false));
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("上传文件并保存异常", e);
+            return DefaultResult.failResult(EnumResultCode.E_UPLOAD_FILE_FAIL.getInfo());
+        }
+    }
+
+    @Override
+    public IResult<ServerUploadResultDto> storageFileAndSave(MultipartFile multipartFile, ServerUploadFileDto serverUploadFileDto) {
+        try {
+            IResult<Integer> checkAppResult = AppUtils.checkAppByName(serverUploadFileDto.getAppName());
+            if (!checkAppResult.isSuccess()) {
+                return DefaultResult.failResult(checkAppResult.getMessage());
+            }
+            Integer appId = checkAppResult.getData();
+            String fileMd5 = Md5Utils.getMD5(multipartFile.getInputStream());
+            YozoFileRefPo yozoFileRefPo = iFileRefService.getFileRefByMd5(fileMd5);
+            if (yozoFileRefPo != null) {
+                return insertRefRelation(yozoFileRefPo, appId);
+            }
+            //上传文件
+            String storageUrl = iStorageManager.generateStorageUrl(multipartFile.getOriginalFilename());
+            Map<String, Object> userMetadata = builduserMetadata(serverUploadFileDto.getUserMetadata());
+            IResult<YozoFileRefPo> storageResult = iStorageManager.storageFile(multipartFile, storageUrl, userMetadata, fileMd5, appId);
             if (!storageResult.isSuccess()) {
                 return DefaultResult.failResult(storageResult.getMessage());
             }
@@ -178,6 +198,24 @@ public class SourceFileManagerImpl implements ISourceFileManager {
         List<YozoFileRefPo> yozoFileRefPos = buildResult.getData();
         IResult<String> deleteResult = iSourceFileService.checkAndDeleteFile(yozoFileRefPos, deleteFileDto.getFileRefIds(), checkAppResult.getData());
         return deleteResult;
+    }
+
+    private Map<String, Object> builduserMetadata(String userMetadata){
+        Map<String, Object> userMetadataMap = new HashMap<>();
+        if (StringUtils.isNotBlank(userMetadata)) {
+            userMetadataMap = FastJsonUtils.parseJSON2Map(userMetadata);
+        }
+        return userMetadataMap;
+    }
+
+    private IResult<ServerUploadResultDto> insertRefRelation(YozoFileRefPo yozoFileRefPo, Integer appId){
+        //插入relation表
+        FileRefRelationPo fileRefRelationPo = iRefRelationService.buildFileRefRelationPo(yozoFileRefPo.getId(), appId);
+        IResult<Boolean> relationResult = iRefRelationService.insertRefRelationPo(fileRefRelationPo);
+        if (!relationResult.isSuccess()) {
+            return DefaultResult.failResult(EnumResultCode.E_FILE_APP_RELATION_SAVE_FAIL.getInfo());
+        }
+        return DefaultResult.successResult(new ServerUploadResultDto(yozoFileRefPo.getId(), relationResult.getData()));
     }
 
     private YozoFileRefDto buildYozoFileRefDto(YozoFileRefPo yozoFileRefPo, UploadFileDto uploadFileDto) {
