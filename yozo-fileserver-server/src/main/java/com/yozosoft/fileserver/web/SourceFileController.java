@@ -55,7 +55,7 @@ public class SourceFileController {
 
     @ApiOperation(value = "服务端上传文件")
     @PostMapping("/serverUploadByFile")
-    public ResponseEntity serverUploadByFile(@RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign, @RequestParam(value = "file") MultipartFile multipartFile, ServerUploadFileDto serverUploadFileDto){
+    public ResponseEntity serverUploadByFile(@RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign, @RequestBody MultipartFile multipartFile, ServerUploadFileDto serverUploadFileDto){
         Boolean checkSignResult = signHelper.checkSign(serverUploadFileDto, nonce, sign);
         if (!checkSignResult) {
             throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());

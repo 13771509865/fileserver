@@ -1,5 +1,6 @@
 package com.yozosoft.fileserver;
 
+import com.yozosoft.fileserver.api.FileServerFeignApi;
 import com.yozosoft.fileserver.common.helper.SignHelper;
 import com.yozosoft.fileserver.common.utils.UUIDHelper;
 import com.yozosoft.fileserver.dto.FileInfoDto;
@@ -13,7 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -23,6 +28,9 @@ public class YozoFileserverServerApplicationTests {
 
     @Autowired
     private SignHelper signHelper;
+
+    @Autowired
+    private FileServerFeignApi fileServerFeignApi;
 
     @Test
     public void test() throws Exception {
@@ -48,6 +56,52 @@ public class YozoFileserverServerApplicationTests {
 //        ResponseEntity<Map<String, Object>> result = fileServerFeignApi.getDownloadUrl(userDownloadDto);
 //        System.out.println(result.toString());
 //        System.out.println("end");
+        ServerUploadFileDto serverUploadFileDto = new ServerUploadFileDto();
+        MultipartFile multipartFile = new MultipartFile() {
+            @Override
+            public String getName() {
+                return "123";
+            }
+
+            @Override
+            public String getOriginalFilename() {
+                return "123";
+            }
+
+            @Override
+            public String getContentType() {
+                return null;
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return false;
+            }
+
+            @Override
+            public long getSize() {
+                return 3;
+            }
+
+            @Override
+            public byte[] getBytes() throws IOException {
+                return new byte[0];
+            }
+
+            @Override
+            public InputStream getInputStream() throws IOException {
+                return null;
+            }
+
+            @Override
+            public void transferTo(File file) throws IOException, IllegalStateException {
+
+            }
+        };
+        ServerUploadFileDto serverUploadFileDto1 = new ServerUploadFileDto();
+        serverUploadFileDto.setAppName("yzcloud");
+        ResponseEntity<Map<String, Object>> mapResponseEntity = fileServerFeignApi.serverUploadByFile("yozo", "yozosoft", multipartFile, "yzcloud", "");
+        System.out.println("end");
     }
 
 }

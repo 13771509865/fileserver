@@ -9,12 +9,10 @@ import com.yozosoft.fileserver.utils.JsonResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
@@ -40,8 +38,8 @@ public interface FileServerFeignApi {
     @PostMapping("/api/file/serverUpload")
     ResponseEntity<Map<String, Object>> uploadByServer(@RequestBody ServerUploadFileDto serverUploadFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign);
 
-    @PostMapping("/api/file/serverUploadByFile")
-    ResponseEntity<Map<String, Object>> serverUploadByFile(@RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign, @RequestParam(value = "file") MultipartFile multipartFile, ServerUploadFileDto serverUploadFileDto);
+    @PostMapping(value = "/api/file/serverUploadByFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<Map<String, Object>> serverUploadByFile(@RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign, @RequestBody MultipartFile multipartFile, @RequestParam(value = "appName") String appName, @RequestParam(value = "userMetadata") String userMetadata);
 
     @Slf4j
     @Component
@@ -76,7 +74,7 @@ public interface FileServerFeignApi {
         }
 
         @Override
-        public ResponseEntity<Map<String, Object>> serverUploadByFile(String nonce, String sign, MultipartFile multipartFile, ServerUploadFileDto serverUploadFileDto) {
+        public ResponseEntity<Map<String, Object>> serverUploadByFile(String nonce, String sign, MultipartFile multipartFile, String appName, String userMetadata) {
             log.error("服务器端上传文件失败");
 //            return new ResponseEntity<>(JsonResultUtils.buildMapResultByResultCode(EnumResultCode.E_DELETE_FILE_FAIL), HttpStatus.INTERNAL_SERVER_ERROR);
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_UPLOAD_FILE_FAIL.getValue(), null, "服务端上传文件熔断失败"));
