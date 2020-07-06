@@ -72,17 +72,19 @@ public class SourceFileManagerImpl implements ISourceFileManager {
         if (!relationResult.isSuccess()) {
             return DefaultResult.failResult(EnumResultCode.E_FILE_APP_RELATION_SAVE_FAIL.getInfo());
         }
+        yozoFileRefPo.setIsExist(relationResult.getData());
         return DefaultResult.successResult(yozoFileRefPo);
     }
 
     @Override
     public IResult<UploadResultDto> sendAppCallBack(YozoFileRefPo yozoFileRefPo, UploadFileDto uploadFileDto) {
+        Boolean isExist = yozoFileRefPo.getIsExist() == null ? false : yozoFileRefPo.getIsExist();
         List<Long> fileRefIds = Arrays.asList(yozoFileRefPo.getId());
         Integer appId = EnumAppType.getEnum(uploadFileDto.getAppName()).getAppId();
         try {
             YozoFileRefDto yozoFileRefDto = buildYozoFileRefDto(yozoFileRefPo, uploadFileDto);
             IResult<Map<String, Object>> sendResult = iCallBackService.sendCallBackUrlByApp(uploadFileDto.getAppName(), yozoFileRefDto);
-            if (!sendResult.isSuccess()) {
+            if (!sendResult.isSuccess() && !isExist) {
                 //删除关联关系
                 iRefRelationService.deleteRefRelation(fileRefIds, appId);
                 return DefaultResult.failResult(sendResult.getMessage());
@@ -90,8 +92,10 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             return DefaultResult.successResult(buildUploadResultDto(yozoFileRefDto, sendResult.getData()));
         } catch (Exception e) {
             e.printStackTrace();
-            //删除关联关系
-            iRefRelationService.deleteRefRelation(fileRefIds, appId);
+            if (!isExist) {
+                //删除关联关系
+                iRefRelationService.deleteRefRelation(fileRefIds, appId);
+            }
             return DefaultResult.failResult(EnumResultCode.E_APP_CALLBACK_FAIL.getInfo());
         }
     }
@@ -200,7 +204,7 @@ public class SourceFileManagerImpl implements ISourceFileManager {
         return deleteResult;
     }
 
-    private Map<String, Object> builduserMetadata(String userMetadata){
+    private Map<String, Object> builduserMetadata(String userMetadata) {
         Map<String, Object> userMetadataMap = new HashMap<>();
         if (StringUtils.isNotBlank(userMetadata)) {
             userMetadataMap = FastJsonUtils.parseJSON2Map(userMetadata);
@@ -208,7 +212,7 @@ public class SourceFileManagerImpl implements ISourceFileManager {
         return userMetadataMap;
     }
 
-    private IResult<ServerUploadResultDto> insertRefRelation(YozoFileRefPo yozoFileRefPo, Integer appId){
+    private IResult<ServerUploadResultDto> insertRefRelation(YozoFileRefPo yozoFileRefPo, Integer appId) {
         //插入relation表
         FileRefRelationPo fileRefRelationPo = iRefRelationService.buildFileRefRelationPo(yozoFileRefPo.getId(), appId);
         IResult<Boolean> relationResult = iRefRelationService.insertRefRelationPo(fileRefRelationPo);

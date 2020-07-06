@@ -83,6 +83,7 @@ public class StorageServiceImpl implements IStorageService {
         if (!relationResult.isSuccess()) {
             return DefaultResult.failResult(EnumResultCode.E_FILE_APP_RELATION_SAVE_FAIL.getInfo());
         }
+        yozoFileRefPo.setIsExist(relationResult.getData());
         return DefaultResult.successResult(yozoFileRefPo);
     }
 

@@ -25,4 +25,9 @@ public class YozoFileRefPo {
     private Long fileSize;
 
     private String remark;
+
+    /**
+     * 业务上用的
+     */
+    private Boolean isExist;
 }
