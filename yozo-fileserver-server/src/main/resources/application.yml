@@ -102,6 +102,7 @@ yfs:
   tempPath: D:/fcs/temp
   downloadDomain: http://192.168.0.126:9001
   signSecret: qaxet9223210^*&
+  logPath: /users/logs
 
 app:
   callback:
