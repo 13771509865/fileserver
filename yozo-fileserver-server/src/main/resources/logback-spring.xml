@@ -2,9 +2,8 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
     <springProperty scope="context" name="applicationName" source="spring.application.name" defaultValue="localhost"/>
-    <springProperty scope="context" name="logPath" source="yfs.logPath" defaultValue="/users/logs"/>
     <property name="APP_NAME" value="${applicationName}" />
-    <property name="LOG_PATH" value="${logPath}" />
+    <property name="LOG_PATH" value="../logs" />
     <property name="LOG_FILE" value="${LOG_PATH}/${APP_NAME}.log" />
 
     <appender name="APPLICATION"
