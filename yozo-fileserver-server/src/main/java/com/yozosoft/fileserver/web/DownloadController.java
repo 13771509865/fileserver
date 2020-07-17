@@ -5,6 +5,7 @@ import com.yozosoft.fileserver.common.helper.SignHelper;
 import com.yozosoft.fileserver.common.utils.HttpUtils;
 import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.constants.EnumResultCode;
+import com.yozosoft.fileserver.dto.DownloadResultDto;
 import com.yozosoft.fileserver.dto.ServerDownloadDto;
 import com.yozosoft.fileserver.dto.UserDownloadDto;
 import com.yozosoft.fileserver.model.dto.LocalDownloadDto;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,7 +50,7 @@ public class DownloadController {
         if (!checkSignResult) {
             throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
         }
-        IResult<Map<Long, String>> downloadResult = iDownloadManager.serverDownload(serverDownloadDto);
+        IResult<List<DownloadResultDto>> downloadResult = iDownloadManager.serverDownload(serverDownloadDto);
         if (!downloadResult.isSuccess()) {
             return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_SERVER_DOWNLOAD_FAIL.getValue(), null, downloadResult.getMessage()));
         }

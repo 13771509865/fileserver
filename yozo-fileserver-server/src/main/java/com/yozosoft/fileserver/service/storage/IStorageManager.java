@@ -1,6 +1,7 @@
 package com.yozosoft.fileserver.service.storage;
 
 import com.yozosoft.fileserver.common.utils.IResult;
+import com.yozosoft.fileserver.dto.DownloadResultDto;
 import com.yozosoft.fileserver.model.dto.FileRefInfoDto;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,7 +40,7 @@ public interface IStorageManager {
 
     IResult<String> deleteFile(String storageUrl);
 
-    IResult<Map<Long, String>> downloadFileToServer(List<FileRefInfoDto> storageUrls, String storageDir);
+    IResult<List<DownloadResultDto>> downloadFileToServer(List<FileRefInfoDto> storageUrls, String storageDir);
 
     IResult<String> generateDownloadUrl(List<FileRefInfoDto> storageUrls, String zipFileName, Long timeOut, Boolean needZip);
 }

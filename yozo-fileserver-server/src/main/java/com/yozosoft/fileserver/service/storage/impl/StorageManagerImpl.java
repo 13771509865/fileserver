@@ -3,6 +3,7 @@ package com.yozosoft.fileserver.service.storage.impl;
 import com.yozosoft.fileserver.common.constants.StorageConstant;
 import com.yozosoft.fileserver.common.utils.*;
 import com.yozosoft.fileserver.constants.EnumResultCode;
+import com.yozosoft.fileserver.dto.DownloadResultDto;
 import com.yozosoft.fileserver.model.dto.FileRefInfoDto;
 import com.yozosoft.fileserver.model.po.YozoFileRefPo;
 import com.yozosoft.fileserver.service.download.IDownloadService;
@@ -18,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author zhoufeng
@@ -85,8 +83,8 @@ public class StorageManagerImpl implements IStorageManager {
     }
 
     @Override
-    public IResult<Map<Long, String>> downloadFileToServer(List<FileRefInfoDto> storageUrls, String storageDir) {
-        Map<Long, String> result = new HashMap<>(storageUrls.size());
+    public IResult<List<DownloadResultDto>> downloadFileToServer(List<FileRefInfoDto> storageUrls, String storageDir) {
+        List<DownloadResultDto> result = new ArrayList<>();
         for (FileRefInfoDto fileRefInfoDto : storageUrls) {
             String storageUrl = fileRefInfoDto.getStorageUrl();
             String fileRelativePath = fileRefInfoDto.getFileRelativePath();
@@ -104,7 +102,7 @@ public class StorageManagerImpl implements IStorageManager {
             if (!downloadResult.isSuccess()) {
                 return DefaultResult.failResult(downloadResult.getMessage());
             }
-            result.put(fileRefInfoDto.getFileRefId(), targetFile.getAbsolutePath());
+            result.add(new DownloadResultDto(fileRefInfoDto.getFileRefId(), targetFile.getAbsolutePath()));
         }
         return DefaultResult.successResult(result);
     }
@@ -122,7 +120,7 @@ public class StorageManagerImpl implements IStorageManager {
             //多文件下载
             File zipDir = iDownloadService.buildZipDir();
             File zipFile = iDownloadService.buildZipFile(zipDir, zipFileName);
-            IResult<Map<Long, String>> downloadResult = downloadFileToServer(storageUrls, zipDir.getAbsolutePath());
+            IResult<List<DownloadResultDto>> downloadResult = downloadFileToServer(storageUrls, zipDir.getAbsolutePath());
             if (!downloadResult.isSuccess()) {
                 return DefaultResult.failResult(downloadResult.getMessage());
             }

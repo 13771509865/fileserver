@@ -4,6 +4,7 @@ import com.yozosoft.fileserver.common.utils.AppUtils;
 import com.yozosoft.fileserver.common.utils.DefaultResult;
 import com.yozosoft.fileserver.common.utils.IResult;
 import com.yozosoft.fileserver.constants.EnumResultCode;
+import com.yozosoft.fileserver.dto.DownloadResultDto;
 import com.yozosoft.fileserver.dto.FileInfoDto;
 import com.yozosoft.fileserver.dto.ServerDownloadDto;
 import com.yozosoft.fileserver.dto.UserDownloadDto;
@@ -44,13 +45,13 @@ public class DownloadManagerImpl implements IDownloadManager {
     private IFileRefService iFileRefService;
 
     @Override
-    public IResult<Map<Long, String>> serverDownload(ServerDownloadDto serverDownloadDto) {
+    public IResult<List<DownloadResultDto>> serverDownload(ServerDownloadDto serverDownloadDto) {
         IResult<List<FileRefInfoDto>> checkResult = checkAndGetStorageUrls(serverDownloadDto.getAppName(), serverDownloadDto.getFileInfos());
         if (!checkResult.isSuccess()) {
             return DefaultResult.failResult(checkResult.getMessage());
         }
         String storageDir = iDownloadService.buildStorageDir(serverDownloadDto);
-        IResult<Map<Long, String>> downloadResult = iStorageManager.downloadFileToServer(checkResult.getData(), storageDir);
+        IResult<List<DownloadResultDto>> downloadResult = iStorageManager.downloadFileToServer(checkResult.getData(), storageDir);
         return downloadResult;
     }
 
