@@ -1,7 +1,9 @@
 package com.yozosoft.fileserver.utils;
 
+import com.yozosoft.fileserver.dto.DownloadResultDto;
 import com.yozosoft.fileserver.dto.ServerUploadResultDto;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,13 +32,13 @@ public class ResultAnalysisUtils {
         }
     }
 
-    public static Map<String, Object> getServerDownloadData(Map<String, Object> responseBody) {
+    public static List<DownloadResultDto> getServerDownloadData(Map<String, Object> responseBody) {
         if (responseBody == null) {
             return null;
         }
         try {
             Object obj = responseBody.get(data);
-            Map<String, Object> result = FastJsonUtils.parseJSON2Map(obj);
+            List<DownloadResultDto> result = FastJsonUtils.jsonToList(FastJsonUtils.serializeData(obj), DownloadResultDto.class);
             return result;
         } catch (Exception e) {
             e.printStackTrace();
