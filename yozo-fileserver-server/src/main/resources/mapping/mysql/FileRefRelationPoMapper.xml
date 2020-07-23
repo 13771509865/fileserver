@@ -41,6 +41,14 @@
         <include refid="search_condition"/>
     </select>
 
+    <select id="selectUsedFileRefIds" resultType="long">
+        select FILEREF_ID from FILEREFRELATION where FILEREF_ID IN
+        <foreach item="item" index="index" collection="fileRefIds"
+                 open="(" separator="," close=")">
+            ${item}
+        </foreach> group by FILEREF_ID
+    </select>
+
     <insert id="insertSelective" parameterType="com.yozosoft.fileserver.model.po.FileRefRelationPo">
         insert into FILEREFRELATION
         <trim prefix="(" suffix=")" suffixOverrides=",">
