@@ -59,7 +59,7 @@ spring:
       shutdown-timeout: 1000
 
 mybatis:
-  mapper-locations: classpath:mapping/dm/*.xml
+  mapper-locations: classpath:mapping/mysql/*.xml
   type-aliases-package: com.yozosoft.fileserver.model
 
 #分页插件配置
