@@ -223,7 +223,13 @@ public class SourceFileManagerImpl implements ISourceFileManager {
     }
 
     private YozoFileRefDto buildYozoFileRefDto(YozoFileRefPo yozoFileRefPo, UploadFileDto uploadFileDto) {
-        YozoFileRefDto yozoFileRefDto = new YozoFileRefDto(yozoFileRefPo.getId(), yozoFileRefPo.getFileSize(), uploadFileDto.getTaskId(), uploadFileDto.getUserMetadata());
+        YozoFileRefDto yozoFileRefDto = new YozoFileRefDto();
+        yozoFileRefDto.setFileRefId(yozoFileRefPo.getId());
+        yozoFileRefDto.setFileSize(yozoFileRefPo.getFileSize());
+        yozoFileRefDto.setTaskId(uploadFileDto.getTaskId());
+        yozoFileRefDto.setStorageUrl(yozoFileRefPo.getStorageUrl());
+        yozoFileRefDto.setFileMd5(yozoFileRefPo.getFileMd5());
+        yozoFileRefDto.setUserMetadata(uploadFileDto.getUserMetadata());
         return yozoFileRefDto;
     }
 
