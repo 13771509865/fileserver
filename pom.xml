@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.yozosoft</groupId>
-        <artifactId>yozo-boot-ep-parent</artifactId>
+        <artifactId>yozo-boot-starter-parent</artifactId>
         <version>0.2.1-SNAPSHOT</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
@@ -128,6 +128,12 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>com.yozosoft</groupId>
+            <artifactId>yozo-boot-starter</artifactId>
+            <version>0.2.2-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>

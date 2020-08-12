@@ -129,4 +129,6 @@ hystrix:
             timeoutInMilliseconds: 6000   #hystrix的超时时间需要大于ribbon的超时时间
   threadpool:
     default:
-      coreSize: 150   #默认并发10
+      coreSize: 10
+      maxQueueSize: 3000
+      queueSizeRejectionThreshold: 3000
