@@ -152,7 +152,8 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             if (!storageResult.isSuccess()) {
                 return DefaultResult.failResult(storageResult.getMessage());
             }
-            return DefaultResult.successResult(new ServerUploadResultDto(storageResult.getData().getId(), false));
+            YozoFileRefPo yozoFileRefPoResult = storageResult.getData();
+            return DefaultResult.successResult(new ServerUploadResultDto(yozoFileRefPoResult.getId(), false, yozoFileRefPoResult.getStorageUrl(), yozoFileRefPoResult.getFileMd5(), yozoFileRefPoResult.getFileSize()));
         } catch (Exception e) {
             e.printStackTrace();
             log.error("上传文件并保存异常", e);
@@ -180,7 +181,8 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             if (!storageResult.isSuccess()) {
                 return DefaultResult.failResult(storageResult.getMessage());
             }
-            return DefaultResult.successResult(new ServerUploadResultDto(storageResult.getData().getId(), false));
+            YozoFileRefPo yozoFileRefPoResult = storageResult.getData();
+            return DefaultResult.successResult(new ServerUploadResultDto(yozoFileRefPoResult.getId(), false, yozoFileRefPoResult.getStorageUrl(), yozoFileRefPoResult.getFileMd5(), yozoFileRefPoResult.getFileSize()));
         } catch (Exception e) {
             e.printStackTrace();
             log.error("上传文件并保存异常", e);
@@ -219,7 +221,7 @@ public class SourceFileManagerImpl implements ISourceFileManager {
         if (!relationResult.isSuccess()) {
             return DefaultResult.failResult(EnumResultCode.E_FILE_APP_RELATION_SAVE_FAIL.getInfo());
         }
-        return DefaultResult.successResult(new ServerUploadResultDto(yozoFileRefPo.getId(), relationResult.getData()));
+        return DefaultResult.successResult(new ServerUploadResultDto(yozoFileRefPo.getId(), relationResult.getData(), yozoFileRefPo.getStorageUrl(), yozoFileRefPo.getFileMd5(), yozoFileRefPo.getFileSize()));
     }
 
     private YozoFileRefDto buildYozoFileRefDto(YozoFileRefPo yozoFileRefPo, UploadFileDto uploadFileDto) {

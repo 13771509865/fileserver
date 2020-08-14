@@ -17,4 +17,10 @@ public class ServerUploadResultDto {
     private Long fileRefId;
 
     private Boolean isExist;
+
+    private String storageUrl;
+
+    private String fileMd5;
+
+    private Long fileSize;
 }
