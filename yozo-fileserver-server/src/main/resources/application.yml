@@ -92,15 +92,15 @@ http:
 yfs:
   workId: 1         #范围是0-1024
   storage:
-    type: 0         #0-本地存储，1-Oss，2-Obs, 3-minio
+    type: 2         #0-本地存储，1-Oss，2-Obs, 3-minio
     localRootPath: D:/fcs      #针对本地存储设置的存储根目录
-    endPoint: http://localhost:8000
-    accessKey: minioadmin
-    secretKey: minioadmin
-    bucketName: local
+    endPoint: http://obs.cn-east-2.myhuaweicloud.com
+    accessKey: UF740COJY9EEWPIMZOMU
+    secretKey: iLpQKvHhOMtw3ZK9zCAdFvhMaGPTSemZanSP6TNX
+    bucketName: yozonetdriver
   downloadRoot: D:/fcs/download
   tempPath: D:/fcs/temp
-  downloadDomain: http://192.168.0.126:9001
+  downloadDomain: http://192.168.0.128:9001
   signSecret: qaxet9223210^*&
 
 app:
