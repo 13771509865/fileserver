@@ -98,16 +98,16 @@ yfs:
     accessKey: UF740COJY9EEWPIMZOMU
     secretKey: iLpQKvHhOMtw3ZK9zCAdFvhMaGPTSemZanSP6TNX
     bucketName: yozonetdriver
-  downloadRoot: D:/fcs/download
-  tempPath: D:/fcs/temp
-  downloadDomain: http://192.168.0.128:9001
+  downloadRoot: /users/appdata/files/download
+  tempPath: /users/appdata/files/temp
+  downloadDomain: http://172.18.21.24:8091/fileserver
   signSecret: qaxet9223210^*&
 
 app:
   callback:
     yzcloud:
       enable: true
-      url: http://192.168.60.106:9000/epdrive/completeUpload
+      url: http://172.18.21.24/epdrive/completeUpload
 
 #客户端配置
 feign:
