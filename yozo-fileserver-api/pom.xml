@@ -17,7 +17,7 @@
     </parent>
 
     <properties>
-        <yozo-ep-starter.version>0.2.1-SNAPSHOT</yozo-ep-starter.version>
+        <yozo-boot-starter.version>0.2.2-SNAPSHOT</yozo-boot-starter.version>
         <feign-okhttp.version>11.0</feign-okhttp.version>
         <fastjson.version>1.2.68</fastjson.version>
         <feign-httpclient.version>11.0</feign-httpclient.version>
@@ -27,8 +27,8 @@
     <dependencies>
         <dependency>
             <groupId>com.yozosoft</groupId>
-            <artifactId>yozo-boot-ep-starter</artifactId>
-            <version>${yozo-ep-starter.version}</version>
+            <artifactId>yozo-boot-starter</artifactId>
+            <version>${yozo-boot-starter.version}</version>
         </dependency>
 
         <dependency>
