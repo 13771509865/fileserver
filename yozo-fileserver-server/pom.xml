@@ -5,7 +5,7 @@
     <groupId>com.yozosoft</groupId>
     <artifactId>yozo-fileserver-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>yozo-fileserver-server</name>
     <description>server</description>
 
