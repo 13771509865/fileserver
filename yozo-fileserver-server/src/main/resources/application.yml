@@ -18,12 +18,12 @@ spring:
   datasource:
     druid:                          #springboot2不支持配置继承,如多数据源每个要写完整配置
       one:
-        driver-class-name: dm.jdbc.driver.DmDriver
-        #        driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:dm://192.168.1.3:5236/FILESERVER?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8          #数据库连接url
-        #        url: jdbc:mysql://192.168.0.44:3306/fileserver?characterEncoding=utf-8&serverTimezone=Asia/Shanghai          #数据库连接url
+#        driver-class-name: dm.jdbc.driver.DmDriver
+        driver-class-name: com.mysql.cj.jdbc.Driver
+#        url: jdbc:dm://172.18.21.59:5236/FILESERVER?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8          #数据库连接url
+        url: jdbc:mysql://172.18.21.59:3306/fileserver?characterEncoding=utf-8&serverTimezone=Asia/Shanghai          #数据库连接url
         username: yozo                            #数据库用户名
-        password: yozosoft2020                          #数据库密码
+        password: yozosoft                          #数据库密码
         #        username: root                            #数据库用户名
         #        password: 123456                          #数据库密码
         max-active: 2000                 # 最大连接池数量
@@ -42,7 +42,7 @@ spring:
     timeout: 20000 #设置客户端超时时间，单位是毫秒，默认为2000
     password: yozosoft #密码
     #单机版
-    host: 192.168.1.3
+    host: 172.18.21.59
     port: 6379
     #集群版
     #    cluster:
@@ -64,7 +64,7 @@ mybatis:
 
 #分页插件配置
 pagehelper:
-  helperDialect: dm  #数据库连接
+  helperDialect: mysql  #数据库连接
   reasonable: true      #分页合理化参数,如超过最后一页修正
   supportMethodsArguments: true    #支持通过 Mapper 接口参数来传递分页参数，直接传分页参数支持分页(pageNum,pageSize)
   page-size-zero: true  #如果pageSize为0则查询全部结果
@@ -92,22 +92,22 @@ http:
 yfs:
   workId: 1         #范围是0-1024
   storage:
-    type: 0         #0-本地存储，1-Oss，2-Obs, 3-minio
+    type: 2         #0-本地存储，1-Oss，2-Obs, 3-minio
     localRootPath: D:/fcs      #针对本地存储设置的存储根目录
-    endPoint: http://localhost:8000
-    accessKey: minioadmin
-    secretKey: minioadmin
-    bucketName: local
-  downloadRoot: D:/fcs/download
-  tempPath: D:/fcs/temp
-  downloadDomain: http://192.168.0.126:9001
+    endPoint: http://obs.cn-east-2.myhuaweicloud.com
+    accessKey: UF740COJY9EEWPIMZOMU
+    secretKey: iLpQKvHhOMtw3ZK9zCAdFvhMaGPTSemZanSP6TNX
+    bucketName: yozonetdriver
+  downloadRoot: /users/appdata/files/download
+  tempPath: /users/appdata/files/temp
+  downloadDomain: http://172.18.21.59/fileserver
   signSecret: qaxet9223210^*&
 
 app:
   callback:
     yzcloud:
       enable: true
-      url: http://192.168.60.106:9000/epdrive/completeUpload
+      url: http://172.18.21.59/epdrive/completeUpload
 
 #客户端配置
 feign:
