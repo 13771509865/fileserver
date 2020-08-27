@@ -53,7 +53,8 @@ public enum EnumResultCode {
     E_OSS_GENERATE_DOWNLOAD_URL_FAIL(1022, "oss生成文档下载链接失败"),
     E_SERVER_UPLOAD_PATH_NOT_EXIST(1023, "待上传文件不存在"),
     E_MINIO_STORAGE_FILE_FAIL(1024, "minio保存上传文件失败"),
-    E_MINIO_GENERATE_DOWNLOAD_URL_FAIL(1025, "minio生成文档下载链接失败");
+    E_MINIO_GENERATE_DOWNLOAD_URL_FAIL(1025, "minio生成文档下载链接失败"),
+    E_FILE_SIZE_ILLEGAL(1026, "文件大小为0kb,上传失败");
 
     private Integer value;
     private String info;
