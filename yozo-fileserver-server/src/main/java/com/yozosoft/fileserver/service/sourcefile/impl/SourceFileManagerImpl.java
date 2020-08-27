@@ -107,6 +107,9 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             if (!checkAppResult.isSuccess()) {
                 return DefaultResult.failResult(checkAppResult.getMessage());
             }
+            if(!checkEmptyFile(null, multipartFile)){
+                return DefaultResult.failResult(EnumResultCode.E_FILE_SIZE_ILLEGAL.getInfo());
+            }
             Integer appId = checkAppResult.getData();
             String fileMd5 = Md5Utils.getMD5(multipartFile.getInputStream());
             String webFileMd5 = uploadFileDto.getFileMd5();
@@ -139,6 +142,9 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             if (!storageFile.isFile()) {
                 return DefaultResult.failResult(EnumResultCode.E_SERVER_UPLOAD_PATH_NOT_EXIST.getInfo());
             }
+            if(!checkEmptyFile(storageFile, null)){
+                return DefaultResult.failResult(EnumResultCode.E_FILE_SIZE_ILLEGAL.getInfo());
+            }
             String fileMd5 = Md5Utils.getMD5(storageFile);
             YozoFileRefPo yozoFileRefPo = iFileRefService.getFileRefByMd5(fileMd5);
             if (yozoFileRefPo != null) {
@@ -167,6 +173,9 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             IResult<Integer> checkAppResult = AppUtils.checkAppByName(serverUploadFileDto.getAppName());
             if (!checkAppResult.isSuccess()) {
                 return DefaultResult.failResult(checkAppResult.getMessage());
+            }
+            if(!checkEmptyFile(null, multipartFile)){
+                return DefaultResult.failResult(EnumResultCode.E_FILE_SIZE_ILLEGAL.getInfo());
             }
             Integer appId = checkAppResult.getData();
             String fileMd5 = Md5Utils.getMD5(multipartFile.getInputStream());
@@ -241,5 +250,14 @@ public class SourceFileManagerImpl implements ISourceFileManager {
         uploadResultDto.setFileSize(yozoFileRefDto.getFileSize());
         uploadResultDto.setAppResponseData(appResponseData);
         return uploadResultDto;
+    }
+
+    private Boolean checkEmptyFile(File file,MultipartFile multipartFile){
+        if(file!=null){
+            return file.length()>0;
+        }else if(multipartFile!=null){
+            return multipartFile.getSize()>0;
+        }
+        return false;
     }
 }
