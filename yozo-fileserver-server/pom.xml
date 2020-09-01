@@ -100,7 +100,7 @@
     </dependencies>
 
     <build>
-        <finalName>yozo-fileserver</finalName>
+<!--        <finalName>yozo-fileserver</finalName>-->
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
