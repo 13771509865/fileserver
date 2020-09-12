@@ -84,9 +84,11 @@ public class SourceFileManagerImpl implements ISourceFileManager {
         try {
             YozoFileRefDto yozoFileRefDto = buildYozoFileRefDto(yozoFileRefPo, uploadFileDto);
             IResult<Map<String, Object>> sendResult = iCallBackService.sendCallBackUrlByApp(uploadFileDto.getAppName(), yozoFileRefDto);
-            if (!sendResult.isSuccess() && !isExist) {
-                //删除关联关系
-                iRefRelationService.deleteRefRelation(fileRefIds, appId);
+            if (!sendResult.isSuccess()) {
+                if(!isExist){
+                    //删除关联关系
+                    iRefRelationService.deleteRefRelation(fileRefIds, appId);
+                }
                 return DefaultResult.failResult(sendResult.getMessage());
             }
             return DefaultResult.successResult(buildUploadResultDto(yozoFileRefDto, sendResult.getData()));
