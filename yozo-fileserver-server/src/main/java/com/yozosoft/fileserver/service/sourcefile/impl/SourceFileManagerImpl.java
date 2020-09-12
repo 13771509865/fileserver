@@ -86,7 +86,7 @@ public class SourceFileManagerImpl implements ISourceFileManager {
         try {
             YozoFileRefDto yozoFileRefDto = buildYozoFileRefDto(yozoFileRefPo, uploadFileDto);
             IResult<Map<String, Object>> sendResult = iCallBackService.sendCallBackUrlByApp(uploadFileDto.getAppName(), yozoFileRefDto);
-            System.out.println("======+sendResult:"+ JSON.toJSONString(sendResult));
+            log.error("======+sendResult:"+ JSON.toJSONString(sendResult));
             if (!sendResult.isSuccess()) {
                 if(!isExist){
                     //删除关联关系
