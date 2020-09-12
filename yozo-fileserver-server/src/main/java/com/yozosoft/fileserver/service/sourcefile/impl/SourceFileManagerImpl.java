@@ -1,5 +1,6 @@
 package com.yozosoft.fileserver.service.sourcefile.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.yozosoft.fileserver.common.utils.AppUtils;
 import com.yozosoft.fileserver.common.utils.DefaultResult;
 import com.yozosoft.fileserver.common.utils.IResult;
@@ -21,6 +22,7 @@ import com.yozosoft.fileserver.service.sourcefile.ISourceFileManager;
 import com.yozosoft.fileserver.service.sourcefile.ISourceFileService;
 import com.yozosoft.fileserver.service.storage.IStorageManager;
 import com.yozosoft.fileserver.utils.FastJsonUtils;
+import com.yozosoft.fileserver.utils.JsonResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +86,7 @@ public class SourceFileManagerImpl implements ISourceFileManager {
         try {
             YozoFileRefDto yozoFileRefDto = buildYozoFileRefDto(yozoFileRefPo, uploadFileDto);
             IResult<Map<String, Object>> sendResult = iCallBackService.sendCallBackUrlByApp(uploadFileDto.getAppName(), yozoFileRefDto);
+            System.out.println("======+sendResult:"+ JSON.toJSONString(sendResult));
             if (!sendResult.isSuccess()) {
                 if(!isExist){
                     //删除关联关系
