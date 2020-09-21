@@ -96,7 +96,7 @@ yfs:
   storage:
     type: 2         #0-本地存储，1-Oss，2-Obs, 3-minio
     localRootPath: /users/appdata/files/source      #针对本地存储设置的存储根目录
-    endPoint: http://obs.cn-east-2.myhuaweicloud.com
+    endPoint: https://obs.cn-east-2.myhuaweicloud.com
     accessKey: UF740COJY9EEWPIMZOMU
     secretKey: iLpQKvHhOMtw3ZK9zCAdFvhMaGPTSemZanSP6TNX
     bucketName: yozonetdriver
