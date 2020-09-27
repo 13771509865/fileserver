@@ -109,6 +109,9 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             if (!checkAppResult.isSuccess()) {
                 return DefaultResult.failResult(checkAppResult.getMessage());
             }
+            if(!checkEmptyFile(null, multipartFile)){
+                return DefaultResult.failResult(EnumResultCode.E_FILE_SIZE_ILLEGAL.getInfo());
+            }
             Integer appId = checkAppResult.getData();
             String fileMd5 = Md5Utils.getMD5(multipartFile.getInputStream());
             String webFileMd5 = uploadFileDto.getFileMd5();
@@ -141,6 +144,9 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             if (!storageFile.isFile()) {
                 return DefaultResult.failResult(EnumResultCode.E_SERVER_UPLOAD_PATH_NOT_EXIST.getInfo());
             }
+            if(!checkEmptyFile(storageFile, null)){
+                return DefaultResult.failResult(EnumResultCode.E_FILE_SIZE_ILLEGAL.getInfo());
+            }
             String fileMd5 = Md5Utils.getMD5(storageFile);
             YozoFileRefPo yozoFileRefPo = iFileRefService.getFileRefByMd5(fileMd5);
             if (yozoFileRefPo != null) {
@@ -154,7 +160,8 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             if (!storageResult.isSuccess()) {
                 return DefaultResult.failResult(storageResult.getMessage());
             }
-            return DefaultResult.successResult(new ServerUploadResultDto(storageResult.getData().getId(), false));
+            YozoFileRefPo yozoFileRefPoResult = storageResult.getData();
+            return DefaultResult.successResult(new ServerUploadResultDto(yozoFileRefPoResult.getId(), false, yozoFileRefPoResult.getStorageUrl(), yozoFileRefPoResult.getFileMd5(), yozoFileRefPoResult.getFileSize()));
         } catch (Exception e) {
             e.printStackTrace();
             log.error("上传文件并保存异常", e);
@@ -169,6 +176,9 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             if (!checkAppResult.isSuccess()) {
                 return DefaultResult.failResult(checkAppResult.getMessage());
             }
+            if(!checkEmptyFile(null, multipartFile)){
+                return DefaultResult.failResult(EnumResultCode.E_FILE_SIZE_ILLEGAL.getInfo());
+            }
             Integer appId = checkAppResult.getData();
             String fileMd5 = Md5Utils.getMD5(multipartFile.getInputStream());
             YozoFileRefPo yozoFileRefPo = iFileRefService.getFileRefByMd5(fileMd5);
@@ -182,7 +192,8 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             if (!storageResult.isSuccess()) {
                 return DefaultResult.failResult(storageResult.getMessage());
             }
-            return DefaultResult.successResult(new ServerUploadResultDto(storageResult.getData().getId(), false));
+            YozoFileRefPo yozoFileRefPoResult = storageResult.getData();
+            return DefaultResult.successResult(new ServerUploadResultDto(yozoFileRefPoResult.getId(), false, yozoFileRefPoResult.getStorageUrl(), yozoFileRefPoResult.getFileMd5(), yozoFileRefPoResult.getFileSize()));
         } catch (Exception e) {
             e.printStackTrace();
             log.error("上传文件并保存异常", e);
@@ -221,11 +232,17 @@ public class SourceFileManagerImpl implements ISourceFileManager {
         if (!relationResult.isSuccess()) {
             return DefaultResult.failResult(EnumResultCode.E_FILE_APP_RELATION_SAVE_FAIL.getInfo());
         }
-        return DefaultResult.successResult(new ServerUploadResultDto(yozoFileRefPo.getId(), relationResult.getData()));
+        return DefaultResult.successResult(new ServerUploadResultDto(yozoFileRefPo.getId(), relationResult.getData(), yozoFileRefPo.getStorageUrl(), yozoFileRefPo.getFileMd5(), yozoFileRefPo.getFileSize()));
     }
 
     private YozoFileRefDto buildYozoFileRefDto(YozoFileRefPo yozoFileRefPo, UploadFileDto uploadFileDto) {
-        YozoFileRefDto yozoFileRefDto = new YozoFileRefDto(yozoFileRefPo.getId(), yozoFileRefPo.getFileSize(), uploadFileDto.getTaskId(), uploadFileDto.getUserMetadata());
+        YozoFileRefDto yozoFileRefDto = new YozoFileRefDto();
+        yozoFileRefDto.setFileRefId(yozoFileRefPo.getId());
+        yozoFileRefDto.setFileSize(yozoFileRefPo.getFileSize());
+        yozoFileRefDto.setTaskId(uploadFileDto.getTaskId());
+        yozoFileRefDto.setStorageUrl(yozoFileRefPo.getStorageUrl());
+        yozoFileRefDto.setFileMd5(yozoFileRefPo.getFileMd5());
+        yozoFileRefDto.setUserMetadata(uploadFileDto.getUserMetadata());
         return yozoFileRefDto;
     }
 
@@ -235,5 +252,14 @@ public class SourceFileManagerImpl implements ISourceFileManager {
         uploadResultDto.setFileSize(yozoFileRefDto.getFileSize());
         uploadResultDto.setAppResponseData(appResponseData);
         return uploadResultDto;
+    }
+
+    private Boolean checkEmptyFile(File file,MultipartFile multipartFile){
+        if(file!=null){
+            return file.length()>0;
+        }else if(multipartFile!=null){
+            return multipartFile.getSize()>0;
+        }
+        return false;
     }
 }
