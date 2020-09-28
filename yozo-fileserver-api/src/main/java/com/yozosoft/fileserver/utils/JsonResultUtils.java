@@ -100,7 +100,7 @@ public class JsonResultUtils {
         // 用户封装信息，典型的是检验出错信息
         params.put("message", message);
         // 本次请求需要返回的数据
-        params.put("data", data == null ? "" : data);
+        params.put("data", data == null ? null : data);
         return params;
     }
 
