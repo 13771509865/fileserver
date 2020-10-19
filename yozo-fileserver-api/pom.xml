@@ -19,7 +19,7 @@
     <properties>
         <yozo-boot-starter.version>0.2.2-SNAPSHOT</yozo-boot-starter.version>
         <feign-okhttp.version>11.0</feign-okhttp.version>
-        <fastjson.version>1.2.68</fastjson.version>
+        <fastjson.version>1.2.73</fastjson.version>
         <feign-httpclient.version>11.0</feign-httpclient.version>
         <openfeign.version>2.2.2.RELEASE</openfeign.version>
     </properties>
@@ -61,6 +61,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
             </plugin>
         </plugins>
     </build>
