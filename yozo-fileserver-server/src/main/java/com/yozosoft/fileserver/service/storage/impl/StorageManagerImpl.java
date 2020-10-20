@@ -98,9 +98,7 @@ public class StorageManagerImpl implements IStorageManager {
             if (targetFile.exists()) {
                 targetFile.delete();
             }
-            long l = System.currentTimeMillis();
             IResult<String> downloadResult = iStorageClient.downloadFile(storageUrl, targetFile);
-            System.out.println("+++++down"+(System.currentTimeMillis()-l));
             if (!downloadResult.isSuccess()) {
                 return DefaultResult.failResult(downloadResult.getMessage());
             }
@@ -127,18 +125,18 @@ public class StorageManagerImpl implements IStorageManager {
             if (!downloadResult.isSuccess()) {
                 return DefaultResult.failResult(downloadResult.getMessage());
             }
-            System.out.println("-----downloadTime:"+(System.currentTimeMillis()-startTime));
+            log.info("下载多文件obs耗时为:"+(System.currentTimeMillis()-startTime));
             IResult<String> zipResult = ZipUtils.zipFile(zipFile, zipDir);
             if (!zipResult.isSuccess()) {
                 return DefaultResult.failResult(zipResult.getMessage());
             }
-            System.out.println("-----zipTime:"+(System.currentTimeMillis()-startTime));
+            log.info("下载多文件压缩包耗时为:"+(System.currentTimeMillis()-startTime));
             String zipStorageUrl = iStorageService.generateZipStorageUrl();
             IResult<String> uploadResult = iStorageClient.uploadFile(zipFile, zipStorageUrl, null);
             if (!uploadResult.isSuccess()) {
                 return DefaultResult.failResult(uploadResult.getMessage());
             }
-            System.out.println("-----uploadTime:"+(System.currentTimeMillis()-startTime));
+            log.info("下载多文件上传压缩包耗时为:"+(System.currentTimeMillis()-startTime));
             IResult<String> generateUrlResult = iStorageClient.generateUrl(zipStorageUrl, zipFile.getName(), timeOut);
             return generateUrlResult;
         }
