@@ -98,7 +98,9 @@ public class StorageManagerImpl implements IStorageManager {
             if (targetFile.exists()) {
                 targetFile.delete();
             }
+            long l = System.currentTimeMillis();
             IResult<String> downloadResult = iStorageClient.downloadFile(storageUrl, targetFile);
+            System.out.println("+++++down"+(System.currentTimeMillis()-l));
             if (!downloadResult.isSuccess()) {
                 return DefaultResult.failResult(downloadResult.getMessage());
             }
@@ -118,21 +120,25 @@ public class StorageManagerImpl implements IStorageManager {
             return generateResult;
         } else {
             //多文件下载
+            long startTime = System.currentTimeMillis();
             File zipDir = iDownloadService.buildZipDir();
             File zipFile = iDownloadService.buildZipFile(zipDir, zipFileName);
             IResult<List<DownloadResultDto>> downloadResult = downloadFileToServer(storageUrls, zipDir.getAbsolutePath());
             if (!downloadResult.isSuccess()) {
                 return DefaultResult.failResult(downloadResult.getMessage());
             }
+            System.out.println("-----downloadTime:"+(System.currentTimeMillis()-startTime));
             IResult<String> zipResult = ZipUtils.zipFile(zipFile, zipDir);
             if (!zipResult.isSuccess()) {
                 return DefaultResult.failResult(zipResult.getMessage());
             }
+            System.out.println("-----zipTime:"+(System.currentTimeMillis()-startTime));
             String zipStorageUrl = iStorageService.generateZipStorageUrl();
             IResult<String> uploadResult = iStorageClient.uploadFile(zipFile, zipStorageUrl, null);
             if (!uploadResult.isSuccess()) {
                 return DefaultResult.failResult(uploadResult.getMessage());
             }
+            System.out.println("-----uploadTime:"+(System.currentTimeMillis()-startTime));
             IResult<String> generateUrlResult = iStorageClient.generateUrl(zipStorageUrl, zipFile.getName(), timeOut);
             return generateUrlResult;
         }
