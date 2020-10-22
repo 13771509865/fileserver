@@ -118,21 +118,25 @@ public class StorageManagerImpl implements IStorageManager {
             return generateResult;
         } else {
             //多文件下载
+            long startTime = System.currentTimeMillis();
             File zipDir = iDownloadService.buildZipDir();
             File zipFile = iDownloadService.buildZipFile(zipDir, zipFileName);
             IResult<List<DownloadResultDto>> downloadResult = downloadFileToServer(storageUrls, zipDir.getAbsolutePath());
             if (!downloadResult.isSuccess()) {
                 return DefaultResult.failResult(downloadResult.getMessage());
             }
+            log.info("下载多文件obs耗时为:"+(System.currentTimeMillis()-startTime));
             IResult<String> zipResult = ZipUtils.zipFile(zipFile, zipDir);
             if (!zipResult.isSuccess()) {
                 return DefaultResult.failResult(zipResult.getMessage());
             }
+            log.info("下载多文件压缩包耗时为:"+(System.currentTimeMillis()-startTime));
             String zipStorageUrl = iStorageService.generateZipStorageUrl();
             IResult<String> uploadResult = iStorageClient.uploadFile(zipFile, zipStorageUrl, null);
             if (!uploadResult.isSuccess()) {
                 return DefaultResult.failResult(uploadResult.getMessage());
             }
+            log.info("下载多文件上传压缩包耗时为:"+(System.currentTimeMillis()-startTime));
             IResult<String> generateUrlResult = iStorageClient.generateUrl(zipStorageUrl, zipFile.getName(), timeOut);
             return generateUrlResult;
         }
