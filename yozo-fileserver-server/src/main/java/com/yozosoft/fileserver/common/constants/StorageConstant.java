@@ -15,6 +15,8 @@ public class StorageConstant {
 
     public static final String MINIO_STORAGE_TYPE_ID = "3";
 
+    public static final String CEPH_STORAGE_TYPE_ID = "4";
+
     public static final String STORAGE_SEPARATOR = "/";
 
     public static final String DOCUMENT_PATH = "document";
