@@ -35,6 +35,8 @@
         <aliyun-sdk-oss.version>3.9.1</aliyun-sdk-oss.version>
         <yozo-fileserver.version>0.0.1-SNAPSHOT</yozo-fileserver.version>
         <minio.version>7.0.2</minio.version>
+        <awssdk.version>1.11.885</awssdk.version>
+        <httpclient.version>4.5.13</httpclient.version>
     </properties>
 
     <modules>
@@ -54,6 +56,14 @@
                 <groupId>com.yozosoft</groupId>
                 <artifactId>yozo-fileserver-server</artifactId>
                 <version>${yozo-fileserver.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-bom</artifactId>
+                <version>${awssdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>
@@ -123,6 +133,12 @@
                 <groupId>io.minio</groupId>
                 <artifactId>minio</artifactId>
                 <version>${minio.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

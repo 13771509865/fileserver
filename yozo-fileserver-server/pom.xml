@@ -24,6 +24,17 @@
             <groupId>com.yozosoft</groupId>
             <artifactId>yozo-fileserver-api</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+
         <!-- spring session共享 -->
         <dependency>
             <groupId>org.springframework.session</groupId>
