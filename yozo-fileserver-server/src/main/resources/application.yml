@@ -90,7 +90,7 @@ http:
   maxIdleTime: 60000                 #空闲时间(用于定期清理空闲连接)
 
 yfs:
-  workId: 1         #范围是0-1024
+#  workId: 1         #范围是0-1024,不配置默认根据ip计算获得
   storage:
     type: 0         #0-本地存储，1-Oss，2-Obs, 3-minio, 4-ceph
     localRootPath: D:/fcs      #针对本地存储设置的存储根目录
