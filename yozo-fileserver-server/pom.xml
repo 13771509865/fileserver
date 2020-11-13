@@ -80,6 +80,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.kingbase</groupId>
+            <artifactId>kingbaseJdbc</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.shardingsphere</groupId>
             <artifactId>sharding-jdbc-core</artifactId>
         </dependency>
