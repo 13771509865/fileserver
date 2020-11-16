@@ -20,5 +20,9 @@ public class YozoFileRefDto {
 
     private String taskId;
 
+    private String storageUrl;
+
+    private String fileMd5;
+
     private String userMetadata;
 }

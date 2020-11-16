@@ -54,7 +54,7 @@ public class MinioStorageClientImpl implements IStorageClient {
     @Override
     public IResult<String> uploadFile(File file, String storageUrl, Map<String, Object> userMetadata) {
         try {
-            PutObjectOptions putObjectOptions = new PutObjectOptions(file.length(), StorageConstant.DOWNLOAD_PART_SIZE);
+            PutObjectOptions putObjectOptions = new PutObjectOptions(file.length(), StorageConstant.PART_SIZE);
             String bucketName = storageProperties.getBucketName();
             minioClient.putObject(bucketName, storageUrl, file.getAbsolutePath(), putObjectOptions);
         } catch (Exception e) {

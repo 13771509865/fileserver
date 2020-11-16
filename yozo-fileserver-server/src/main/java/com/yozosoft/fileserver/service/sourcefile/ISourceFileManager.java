@@ -33,4 +33,10 @@ public interface ISourceFileManager {
     IResult<ServerUploadResultDto> storageFileAndSave(ServerUploadFileDto serverUploadFileDto);
 
     IResult<ServerUploadResultDto> storageFileAndSave(MultipartFile multipartFile, ServerUploadFileDto serverUploadFileDto);
+
+    IResult<String> storageChunkFile(MultipartFile multipartFile, String fileMd5, Integer chunk);
+
+    IResult<String> checkChunkFile(String fileMd5, Integer chunk, Long chunkSize);
+
+    IResult<YozoFileRefPo> storageFileAndSave(String fileName, Integer chunks, UploadFileDto uploadFileDto);
 }

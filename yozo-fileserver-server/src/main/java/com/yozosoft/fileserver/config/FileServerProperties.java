@@ -24,8 +24,7 @@ import javax.validation.constraints.NotBlank;
 @RefreshScope
 public class FileServerProperties {
 
-    @NotBlank
-    private String workId;
+    private Integer workId;
 
     @NotBlank
     private String downloadRoot;
@@ -38,5 +37,8 @@ public class FileServerProperties {
 
     @NotBlank
     private String signSecret;
+
+    @NotBlank
+    private String chunkPath;
 
 }

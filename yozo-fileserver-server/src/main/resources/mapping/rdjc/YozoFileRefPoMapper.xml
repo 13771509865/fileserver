@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yozosoft.fileserver.dao.YozoFileRefPoMapper">
+    <resultMap id="BaseResultMap" type="com.yozosoft.fileserver.model.po.YozoFileRefPo">
+        <result column="ID" jdbcType="BIGINT" property="id"/>
+        <result column="GMT_CREATE" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="GMT_MODIFIED" jdbcType="TIMESTAMP" property="gmtModified"/>
+        <result column="STATUS" jdbcType="INTEGER" property="status"/>
+        <result column="FILE_MD5" jdbcType="VARCHAR" property="fileMd5"/>
+        <result column="STORAGE_URL" jdbcType="VARCHAR" property="storageUrl"/>
+        <result column="FILE_SIZE" jdbcType="BIGINT" property="fileSize"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    ID, GMT_CREATE, GMT_MODIFIED, STATUS, FILE_MD5, STORAGE_URL, FILE_SIZE, REMARK
+    </sql>
+
+    <select id="selectByFileMd5" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from YOZOFILEREF
+        where FILE_MD5 = #{fileMd5,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByCheckApp" resultMap="BaseResultMap">
+        select
+        T1.*
+        from YOZOFILEREF T1 LEFT JOIN FILEREFRELATION T2 ON T2.FILEREF_ID = T1.ID
+        where T2.APP_ID = #{appId,jdbcType=INTEGER} and T1.ID IN
+        <foreach item="item" index="index" collection="fileRefIds"
+                 open="(" separator="," close=")">
+            ${item}
+        </foreach>
+    </select>
+
+    <delete id="deleteByIds">
+        delete from YOZOFILEREF
+        where ID IN
+        <foreach item="item" index="index" collection="fileRefIds"
+                 open="(" separator="," close=")">
+            ${item}
+        </foreach>
+    </delete>
+
+    <insert id="insertSelective" parameterType="com.yozosoft.fileserver.model.po.YozoFileRefPo">
+        insert into YOZOFILEREF
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="gmtCreate != null">
+                GMT_CREATE,
+            </if>
+            <if test="gmtModified != null">
+                GMT_MODIFIED,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="fileMd5 != null">
+                FILE_MD5,
+            </if>
+            <if test="storageUrl != null">
+                STORAGE_URL,
+            </if>
+            <if test="fileSize != null">
+                FILE_SIZE,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="gmtCreate != null">
+                #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="fileMd5 != null">
+                #{fileMd5,jdbcType=VARCHAR},
+            </if>
+            <if test="storageUrl != null">
+                #{storageUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null">
+                #{fileSize,jdbcType=BIGINT},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+</mapper>

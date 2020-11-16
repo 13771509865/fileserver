@@ -32,6 +32,8 @@ public class ClearFileJob {
 
     private static final String ClearEmptyDirJobLockName = "clearEmptyDirJobLock";
 
+    private static final String ClearChunkFileJobLockName = "clearChunkFileJobLock";
+
      /*"0 0 12 * * ?" 每天中午十二点触发 "0 15 10 ? * *" 每天早上10：15触发 "0 15 10 * * ?"
     每天早上10：15触发 "0 15 10 * * ? *" 每天早上10：15触发 "0 15 10 * * ? 2005" 2005年的每天早上10：15触发
 		"0 * 14 * * ?" 每天从下午2点开始到2点59分每分钟一次触发 "0 0/5 14 * * ?" 每天从下午2点开始到2：55分结束每5分钟一次触发
@@ -56,6 +58,23 @@ public class ClearFileJob {
             //目前是定的一天一清理
             clearFileHelper.clearFile(clearPath, TimeConstant.MILLISECOND_OF_DAY);
             redisService.delete(ClearJobLockName);
+        }
+    }
+
+    /**
+     * @description 自动清理分片临时文件
+     * @author zhoufeng
+     * @date 2020/11/13
+     */
+    @Scheduled(cron = "0 0 3 * * ?")
+    public void clearChunkFile() {
+        //不支持redis集群模式
+        boolean flag = redisService.setnx(ClearChunkFileJobLockName, DateViewUtils.getNowFull(), 12 * TimeConstant.SECOND_OF_HOUR);
+        if (flag) {
+            String clearPath = fileServerProperties.getChunkPath();
+            //目前是定的七天一清理
+            clearFileHelper.clearFile(clearPath, TimeConstant.MILLISECOND_OF_DAY * 7);
+            redisService.delete(ClearChunkFileJobLockName);
         }
     }
 

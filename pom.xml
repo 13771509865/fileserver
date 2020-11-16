@@ -21,6 +21,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipTests>true</skipTests>
         <dm.version>1.1.45</dm.version>
+        <kingbase.version>8.2.0</kingbase.version>
         <druid.version>1.1.22</druid.version>
         <mybatis-starter.version>2.1.1</mybatis-starter.version>
         <mysql-connector.version>8.0.16</mysql-connector.version>
@@ -35,6 +36,8 @@
         <aliyun-sdk-oss.version>3.9.1</aliyun-sdk-oss.version>
         <yozo-fileserver.version>0.0.1-SNAPSHOT</yozo-fileserver.version>
         <minio.version>7.0.2</minio.version>
+        <awssdk.version>1.11.897</awssdk.version>
+        <httpclient.version>4.5.13</httpclient.version>
     </properties>
 
     <modules>
@@ -54,6 +57,14 @@
                 <groupId>com.yozosoft</groupId>
                 <artifactId>yozo-fileserver-server</artifactId>
                 <version>${yozo-fileserver.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-bom</artifactId>
+                <version>${awssdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>
@@ -90,8 +101,20 @@
             </dependency>
 
             <dependency>
+                <groupId>com.kingbase</groupId>
+                <artifactId>kingbaseJdbc</artifactId>
+                <version>${kingbase.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.shardingsphere</groupId>
                 <artifactId>sharding-jdbc-core</artifactId>
+                <version>${shardingjdbc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.shardingsphere</groupId>
+                <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
                 <version>${shardingjdbc.version}</version>
             </dependency>
 
@@ -123,6 +146,12 @@
                 <groupId>io.minio</groupId>
                 <artifactId>minio</artifactId>
                 <version>${minio.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
