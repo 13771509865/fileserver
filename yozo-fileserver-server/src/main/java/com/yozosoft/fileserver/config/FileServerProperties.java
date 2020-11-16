@@ -38,4 +38,7 @@ public class FileServerProperties {
     @NotBlank
     private String signSecret;
 
+    @NotBlank
+    private String chunkPath;
+
 }

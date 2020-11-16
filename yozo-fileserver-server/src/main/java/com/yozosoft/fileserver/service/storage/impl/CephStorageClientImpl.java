@@ -28,6 +28,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.File;
 import java.net.URL;
 import java.util.Date;
@@ -54,6 +55,7 @@ public class CephStorageClientImpl implements IStorageClient {
         AWSCredentials credentials = new BasicAWSCredentials(storageProperties.getAccesskey(), storageProperties.getSecretKey());
         ClientConfiguration clientConfig = new ClientConfiguration();
         clientConfig.setProtocol(Protocol.HTTPS);
+        clientConfig.setMaxConnections(2048);
         amazonS3 = AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withClientConfiguration(clientConfig)
@@ -67,6 +69,13 @@ public class CephStorageClientImpl implements IStorageClient {
         System.out.println("bucket初始化成功");
     }
 
+    @PreDestroy
+    public void destroy() {
+        if (amazonS3 != null) {
+            amazonS3.shutdown();
+        }
+    }
+
     @Override
     public IResult<String> uploadFile(File file, String storageUrl, Map<String, Object> userMetadata) {
         long fileSize = file.length();
@@ -74,7 +83,7 @@ public class CephStorageClientImpl implements IStorageClient {
         TransferManager transferManager = TransferManagerBuilder.standard()
                 .withS3Client(amazonS3)
                 .withMinimumUploadPartSize(StorageConstant.PART_SIZE)
-                .withMultipartCopyThreshold(StorageConstant.PART_SIZE)
+                .withMultipartUploadThreshold(StorageConstant.PART_SIZE)
                 .withExecutorFactory(() -> Executors.newFixedThreadPool(partCount))
                 .build();
         PutObjectRequest request = new PutObjectRequest(storageProperties.getBucketName(), storageUrl, file);

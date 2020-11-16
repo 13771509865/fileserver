@@ -97,6 +97,41 @@ public class SourceFileController {
         return sendAppCallBack(yozoFileRefPo, uploadFileDto);
     }
 
+    @ApiOperation(value = "检查分片文件是否存在")
+    @GetMapping("/chunk")
+    public ResponseEntity checkChunk(@RequestParam(value = "fileMd5") String fileMd5, @RequestParam(value = "chunk") Integer chunk, @RequestParam(value = "chunkSize") Long chunkSize){
+        IResult<String> checkResult = iSourceFileManager.checkChunkFile(fileMd5, chunk, chunkSize);
+        if(!checkResult.isSuccess()){
+            return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_CHUNK_FILE_NOT_EXIST.getValue(), null, checkResult.getMessage()));
+        }
+        return ResponseEntity.ok(JsonResultUtils.successMapResult());
+    }
+
+    @ApiOperation(value = "上传分片文件")
+    @PostMapping("/chunk")
+    public ResponseEntity uploadChunk(@RequestParam(value = "file") MultipartFile multipartFile, @RequestParam(value = "fileMd5") String fileMd5, @RequestParam(value = "chunk") Integer chunk){
+        IResult<String> storageResult = iSourceFileManager.storageChunkFile(multipartFile, fileMd5, chunk);
+        if(!storageResult.isSuccess()){
+            return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_STORAGE_CHUNK_FILE_FAIL.getValue(), null, storageResult.getMessage()));
+        }
+        return ResponseEntity.ok(JsonResultUtils.successMapResult());
+    }
+
+    @ApiOperation(value = "合并分片文件并保存")
+    @PostMapping("/mergeChunks")
+    public ResponseEntity mergeChunks(@Valid UploadFileDto uploadFileDto, @RequestParam(value = "fileName") String fileName, @RequestParam(value = "chunks") Integer chunks, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign){
+        Boolean checkSignResult = signHelper.checkSign(uploadFileDto, nonce, sign);
+        if (!checkSignResult) {
+            throw new ForbiddenAccessException(EnumResultCode.E_REQUEST_ILLEGAL.getValue(), EnumResultCode.E_REQUEST_ILLEGAL.getInfo());
+        }
+        IResult<YozoFileRefPo> storageResult = iSourceFileManager.storageFileAndSave(fileName, chunks, uploadFileDto);
+        if (!storageResult.isSuccess()) {
+            return ResponseEntity.ok(JsonResultUtils.buildMapResult(EnumResultCode.E_UPLOAD_FILE_FAIL.getValue(), null, storageResult.getMessage()));
+        }
+        YozoFileRefPo yozoFileRefPo = storageResult.getData();
+        return sendAppCallBack(yozoFileRefPo, uploadFileDto);
+    }
+
     @ApiOperation(value = "删除源文件")
     @DeleteMapping("/delete")
     public ResponseEntity deleteFile(@RequestBody @Valid DeleteFileDto deleteFileDto, @RequestParam(value = "nonce") String nonce, @RequestParam(value = "sign") String sign) {

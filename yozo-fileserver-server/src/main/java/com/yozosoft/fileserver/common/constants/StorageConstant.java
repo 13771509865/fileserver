@@ -27,7 +27,9 @@ public class StorageConstant {
 
     public static final String MULTIPLE_DOWNLOAD_FILENAME = "yozo";
 
-    public static final Long PART_SIZE = 20 * 1024 * 1024L;
+    public static final String MERGE_FOLDER = "merge";
+
+    public static final Long PART_SIZE = 10 * 1024 * 1024L;
 
     public static final Long DOWNLOAD_PART_SIZE = 10 * 1024 * 1024L;
 }

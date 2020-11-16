@@ -100,6 +100,7 @@ yfs:
     bucketName: local
   downloadRoot: D:/fcs/download
   tempPath: D:/fcs/temp
+  chunkPath: D:/softTemp/chunk
   downloadDomain: http://192.168.0.126:9001
   signSecret: qaxet9223210^*&
 
