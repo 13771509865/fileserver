@@ -41,4 +41,6 @@ public class FileServerProperties {
     @NotBlank
     private String chunkPath;
 
+    private Integer clearChunkDay;
+
 }

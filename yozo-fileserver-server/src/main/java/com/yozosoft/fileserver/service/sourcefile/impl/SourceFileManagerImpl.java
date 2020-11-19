@@ -154,7 +154,10 @@ public class SourceFileManagerImpl implements ISourceFileManager {
             if (StringUtils.isNotBlank(uploadFileDto.getUserMetadata())) {
                 userMetadata = FastJsonUtils.parseJSON2Map(uploadFileDto.getUserMetadata());
             }
-            return iStorageManager.storageFile(storageFile, storageUrl, userMetadata, fileMd5, appId);
+            IResult<YozoFileRefPo> result = iStorageManager.storageFile(storageFile, storageUrl, userMetadata, fileMd5, appId);
+            //删除合并后的临时文件
+            storageFile.delete();
+            return result;
         }catch (Exception e){
             e.printStackTrace();
             log.error("上传文件并保存异常", e);

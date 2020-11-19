@@ -68,12 +68,13 @@ public class ClearFileJob {
      */
     @Scheduled(cron = "0 0 3 * * ?")
     public void clearChunkFile() {
+        Integer clearChunkDay = fileServerProperties.getClearChunkDay() == null ? 7 : fileServerProperties.getClearChunkDay();
         //不支持redis集群模式
         boolean flag = redisService.setnx(ClearChunkFileJobLockName, DateViewUtils.getNowFull(), 12 * TimeConstant.SECOND_OF_HOUR);
         if (flag) {
             String clearPath = fileServerProperties.getChunkPath();
             //目前是定的七天一清理
-            clearFileHelper.clearFile(clearPath, TimeConstant.MILLISECOND_OF_DAY * 7);
+            clearFileHelper.clearFile(clearPath, TimeConstant.MILLISECOND_OF_DAY * clearChunkDay);
             redisService.delete(ClearChunkFileJobLockName);
         }
     }

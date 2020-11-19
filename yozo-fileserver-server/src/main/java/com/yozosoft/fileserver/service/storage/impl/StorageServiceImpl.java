@@ -48,8 +48,8 @@ public class StorageServiceImpl implements IStorageService {
 
     @Override
     public IResult<String> storageFile(MultipartFile multipartFile, String storageUrl, Map<String, Object> userMetadata) {
+        File storageTempFile = new File(fileServerProperties.getTempPath(), storageUrl);
         try {
-            File storageTempFile = new File(fileServerProperties.getTempPath(), storageUrl);
             if (!storageTempFile.getParentFile().exists()) {
                 storageTempFile.getParentFile().mkdirs();
             }
@@ -60,6 +60,8 @@ public class StorageServiceImpl implements IStorageService {
             e.printStackTrace();
             log.error("本地保存上传文件失败", e);
             return DefaultResult.failResult(EnumResultCode.E_LOCAL_STORAGE_FILE_FAIL.getInfo());
+        } finally {
+            storageTempFile.delete();
         }
     }
 
