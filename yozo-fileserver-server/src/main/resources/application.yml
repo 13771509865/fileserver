@@ -1,5 +1,5 @@
 server:
-  port: 9001
+  port: 19001
 
 spring:
   main:
@@ -18,14 +18,14 @@ spring:
   datasource:
     druid:                          #springboot2不支持配置继承,如多数据源每个要写完整配置
       one:
-        driver-class-name: dm.jdbc.driver.DmDriver
-        #        driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:dm://127.0.0.1:5236/FILESERVER?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8          #数据库连接url
-        #        url: jdbc:mysql://192.168.0.44:3306/fileserver?characterEncoding=utf-8&serverTimezone=Asia/Shanghai          #数据库连接url
-        username: yozo                            #数据库用户名
-        password: yozosoft2020                          #数据库密码
-        #        username: root                            #数据库用户名
-        #        password: 123456                          #数据库密码
+#        driver-class-name: dm.jdbc.driver.DmDriver
+        driver-class-name: com.mysql.cj.jdbc.Driver
+#        url: jdbc:dm://127.0.0.1:5236/FILESERVER?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8          #数据库连接url
+        url: jdbc:mysql://127.0.0.1:3306/fileserver?characterEncoding=utf-8&serverTimezone=Asia/Shanghai          #数据库连接url
+#        username: yozo                            #数据库用户名
+#        password: yozosoft2020                          #数据库密码
+        username: root                            #数据库用户名
+        password: 123456                          #数据库密码
         max-active: 2000                 # 最大连接池数量
         initial-size: 10                # 初始化时建立物理连接的个数
         max-wait: 3000                 # 获取连接时最大等待时间,单位毫秒
@@ -40,7 +40,7 @@ spring:
   redis:
     database: 2 # Redis数据库索引（默认为0）
     timeout: 20000 #设置客户端超时时间，单位是毫秒，默认为2000
-    password: yozosoft #密码
+    password: 123456 #密码
     #单机版
     host: 127.0.0.1
     port: 6379
@@ -64,7 +64,7 @@ mybatis:
 
 #分页插件配置
 pagehelper:
-  helperDialect: dm  #数据库连接
+  helperDialect: mysql  #数据库连接
   reasonable: true      #分页合理化参数,如超过最后一页修正
   supportMethodsArguments: true    #支持通过 Mapper 接口参数来传递分页参数，直接传分页参数支持分页(pageNum,pageSize)
   page-size-zero: true  #如果pageSize为0则查询全部结果
@@ -93,13 +93,13 @@ yfs:
 #  workId: 1         #范围是0-1024,不配置默认根据ip计算获得
   storage:
     type: 0         #0-本地存储，1-Oss，2-Obs, 3-minio, 4-ceph
-    localRootPath: D:/fcs      #针对本地存储设置的存储根目录
-    endPoint: http://localhost:8000
-    accessKey: minioadmin
-    secretKey: minioadmin
-    bucketName: local
-  downloadRoot: D:/fcs/download
-  tempPath: D:/fcs/temp
+    localRootPath: D:/softTemp/source      #针对本地存储设置的存储根目录
+    endPoint: https://obs.cn-east-2.myhuaweicloud.com
+    accessKey: UF740COJY9EEWPIMZOMU
+    secretKey: iLpQKvHhOMtw3ZK9zCAdFvhMaGPTSemZanSP6TNX
+    bucketName: yozonetdriver
+  downloadRoot: D:/softTemp/download
+  tempPath: D:/softTemp/temp
   chunkPath: D:/softTemp/chunk
   downloadDomain: http://192.168.0.126:9001
   signSecret: qaxet9223210^*&
