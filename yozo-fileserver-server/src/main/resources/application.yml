@@ -18,8 +18,10 @@ spring:
   datasource:
     druid:                          #springboot2不支持配置继承,如多数据源每个要写完整配置
       one:
+#        driver-class-name: com.kingbase8.Driver
 #        driver-class-name: dm.jdbc.driver.DmDriver
         driver-class-name: com.mysql.cj.jdbc.Driver
+#        url: jdbc:kingbase8://192.168.9.203:54321/fileserver
 #        url: jdbc:dm://127.0.0.1:5236/FILESERVER?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8          #数据库连接url
         url: jdbc:mysql://127.0.0.1:3306/fileserver?characterEncoding=utf-8&serverTimezone=Asia/Shanghai          #数据库连接url
 #        username: yozo                            #数据库用户名
