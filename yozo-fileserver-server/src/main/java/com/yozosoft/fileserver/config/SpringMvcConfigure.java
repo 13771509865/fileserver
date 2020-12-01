@@ -88,10 +88,10 @@ public class SpringMvcConfigure implements WebMvcConfigurer {
      * @author zhoufeng
      * @date 2020/5/6
      */
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").allowedHeaders("*").allowCredentials(true).maxAge(3600);
-//    }
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").allowedHeaders("*").allowCredentials(true).maxAge(3600);
+    }
 
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
