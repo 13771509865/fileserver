@@ -66,32 +66,32 @@ public class SpringMvcConfigure implements WebMvcConfigurer {
         registry.addInterceptor(signInterceptor).addPathPatterns("/api/file/**").excludePathPatterns("/api/file/download/**");
     }
 
-//    private CorsConfiguration corsConfiguration(){
-//        CorsConfiguration corsConfiguration = new CorsConfiguration();
-//        corsConfiguration.addAllowedOrigin("*");
-//        corsConfiguration.addAllowedMethod("*");
-//        corsConfiguration.addAllowedHeader("*");
-//        corsConfiguration.setAllowCredentials(true);
-//        corsConfiguration.setMaxAge(3600L);
-//        return corsConfiguration;
-//    }
+    private CorsConfiguration corsConfiguration(){
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setMaxAge(3600L);
+        return corsConfiguration;
+    }
 //
-//    @Bean
-//    public CorsFilter corsFilter(){
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", corsConfiguration());
-//        return new CorsFilter(source);
-//    }
+    @Bean
+    public CorsFilter corsFilter(){
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration());
+        return new CorsFilter(source);
+    }
 
     /**
      * @description 允许跨域
      * @author zhoufeng
      * @date 2020/5/6
      */
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").allowedHeaders("*").allowCredentials(true).maxAge(3600);
-    }
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").allowedHeaders("*").allowCredentials(true).maxAge(3600);
+//    }
 
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
